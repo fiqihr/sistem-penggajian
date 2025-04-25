@@ -1,0 +1,32 @@
+html,
+body {
+    font-family: "Poppins", sans-serif;
+}
+
+/* Styling untuk elemen select */
+#dt-length-0 {
+    font-size: 14px !important;
+    padding: 4px 10px !important;
+    border-radius: 4px !important;
+}
+
+/* Fokus efek */
+#dt-length-0:focus {
+    outline: none !important;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25) !important;
+}
+
+#dt-length-0 option {
+    padding: 8px 10px !important;
+    background-color: #fff !important;
+    color: #333 !important;
+}
+
+#dt-length-0 option:hover {
+    background-color: #f0f0f0 !important;
+}
+
+/* #mytable-thead {
+    background-color: #f8f9fa;
+    color: #212529;
+} */
