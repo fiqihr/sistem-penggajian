@@ -10,5 +10,8 @@ class PotonganGaji extends Model
     use HasFactory;
     protected $table = 'potongan_gaji';
     protected $primaryKey = 'id_potongan_gaji';
-    protected $guarded = [];
+    protected $fillable =[
+        'nama_potongan',
+        'jml_potongan',
+    ];
 }
