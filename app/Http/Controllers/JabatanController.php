@@ -26,14 +26,18 @@ class JabatanController extends Controller
                 ->editColumn('uang_makan', function ($row) {
                     return formatRupiah($row->uang_makan);
                 })
+                ->editColumn('total', function ($row) {
+                    $total = $row->gaji_pokok + $row->tj_transport + $row->uang_makan;
+                    return formatRupiah($total);
+                })
                 ->addColumn('action', function ($row) {
-                    $showBtn = '<a href="' . route('jabatan.show', $row->id_jabatan) . '" class="btn btn-primary btn-user text-white"><i class="fa-solid fa-eye"></i><span class="ml-2 small">Detail</span></a>';
-                    $editBtn = '<a href="' . route('jabatan.edit', $row->id_jabatan) . '" class="ml-2 btn btn-warning text-white"><i class="fa-solid fa-pen-nib"></i><span class="ml-2 small">Edit</span></a>';
+                    $showBtn = '<a href="' . route('jabatan.show', $row->id_jabatan) . '" class="btn btn-primary btn-user text-white"><i class="fa-solid fa-eye"></i><span class="ml-2 ">Detail</span></a>';
+                    $editBtn = '<a href="' . route('jabatan.edit', $row->id_jabatan) . '" class="ml-2 btn btn-warning text-white"><i class="fa-solid fa-pen-nib"></i><span class="ml-2 ">Edit</span></a>';
                     $deleteBtn = '<form id="delete-form-' . $row->id_jabatan . '" action="' . route('jabatan.destroy', $row->id_jabatan) . '" method="POST" style="display:inline;">
                         ' . csrf_field() . '
                         ' . method_field('DELETE') . '
                         <button type="button" onclick="deleteJabatan(' . $row->id_jabatan . ')" class="btn btn-danger">
-                            <i class="fa-solid fa-trash"></i><span class="ml-2 small">Hapus</span>
+                            <i class="fa-solid fa-trash"></i><span class="ml-2 ">Hapus</span>
                         </button>
                     </form>';
 

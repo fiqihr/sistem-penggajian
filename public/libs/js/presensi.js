@@ -1,8 +1,14 @@
 $(document).ready(function () {
-    $("#my-table").DataTable({
+    const table = $("#my-table").DataTable({
         processing: true,
         serverSide: true,
-        ajax: jabatanRoute,
+        ajax: {
+            url: presensiRoute,
+            data: function (d) {
+                d.bulan = $("#filter-bulan").val();
+                d.tahun = $("#filter-tahun").val();
+            },
+        },
         columns: [
             {
                 data: "DT_RowIndex",
@@ -12,31 +18,29 @@ $(document).ready(function () {
                 className: "align-middle text-center",
             },
             {
-                data: "nama_jabatan",
-                name: "nama_jabatan",
+                data: "bulan",
+                name: "bulan",
                 className: "align-middle",
             },
             {
-                data: "gaji_pokok",
-                name: "gaji_pokok",
+                data: "nama_guru",
+                name: "nama_guru",
                 className: "align-middle",
             },
             {
-                data: "tj_transport",
-                name: "tj_transport",
+                data: "hadir",
+                name: "hadir",
                 className: "align-middle",
             },
             {
-                data: "uang_makan",
-                name: "uang_makan",
+                data: "sakit",
+                name: "sakit",
                 className: "align-middle",
             },
             {
-                data: "total",
-                name: "total",
-                className: "align-middle font-weight-bold",
-                orderable: false,
-                searchable: false,
+                data: "alpha",
+                name: "alpha",
+                className: "align-middle",
             },
             {
                 data: "action",
@@ -65,10 +69,14 @@ $(document).ready(function () {
         },
     });
 
-    // Panggil alert jika ada message dari Laravel
-    if (jabatanMessage) {
-        jabatanBerhasil(jabatanMessage);
-    }
+    // Filter saat select berubah
+    $("#filter-bulan, #filter-tahun").on("change", function () {
+        table.ajax.reload();
+    });
+
+    // if (presensiMessage) {
+    //     jabatanBerhasil(presensiMessage);
+    // }
 });
 
 function jabatanBerhasil(message) {

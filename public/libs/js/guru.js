@@ -2,7 +2,7 @@ $(document).ready(function () {
     $("#my-table").DataTable({
         processing: true,
         serverSide: true,
-        ajax: jabatanRoute,
+        ajax: guruRoute,
         columns: [
             {
                 data: "DT_RowIndex",
@@ -12,31 +12,34 @@ $(document).ready(function () {
                 className: "align-middle text-center",
             },
             {
+                data: "name",
+                name: "name",
+                className: "align-middle",
+            },
+            {
+                data: "nig",
+                name: "nig",
+                className: "align-middle",
+            },
+            {
+                data: "jenis_kelamin",
+                name: "jenis_kelamin",
+                className: "align-middle",
+            },
+            {
                 data: "nama_jabatan",
                 name: "nama_jabatan",
                 className: "align-middle",
             },
             {
-                data: "gaji_pokok",
-                name: "gaji_pokok",
+                data: "tanggal_masuk",
+                name: "tanggal_masuk",
                 className: "align-middle",
             },
             {
-                data: "tj_transport",
-                name: "tj_transport",
+                data: "status",
+                name: "status",
                 className: "align-middle",
-            },
-            {
-                data: "uang_makan",
-                name: "uang_makan",
-                className: "align-middle",
-            },
-            {
-                data: "total",
-                name: "total",
-                className: "align-middle font-weight-bold",
-                orderable: false,
-                searchable: false,
             },
             {
                 data: "action",
@@ -66,12 +69,12 @@ $(document).ready(function () {
     });
 
     // Panggil alert jika ada message dari Laravel
-    if (jabatanMessage) {
-        jabatanBerhasil(jabatanMessage);
+    if (guruMessage) {
+        guruBerhasil(guruMessage);
     }
 });
 
-function jabatanBerhasil(message) {
+function guruBerhasil(message) {
     Swal.fire({
         position: "center",
         icon: "success",
@@ -81,7 +84,7 @@ function jabatanBerhasil(message) {
     });
 }
 
-function deleteJabatan(id) {
+function deleteGuru(id) {
     Swal.fire({
         text: "Apakah kamu yakin?",
         icon: "warning",

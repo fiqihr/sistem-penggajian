@@ -98,9 +98,19 @@
 
     <!-- Nav Item - Tables -->
     <li class="nav-item">
+        <a class="nav-link" href="{{ route('guru.index') }}">
+            <i class="fas fa-fw fa-table"></i>
+            <span>Guru</span></a>
+    </li>
+    <li class="nav-item">
         <a class="nav-link" href="{{ route('jabatan.index') }}">
             <i class="fas fa-fw fa-table"></i>
             <span>Jabatan</span></a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('presensi.index') }}">
+            <i class="fas fa-fw fa-table"></i>
+            <span>Presensi</span></a>
     </li>
     <li class="nav-item">
         <a class="nav-link" href="{{ route('potongan-gaji.index') }}">

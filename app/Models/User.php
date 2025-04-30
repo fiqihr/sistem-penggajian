@@ -23,6 +23,11 @@ class User extends Authenticatable
         'password',
     ];
 
+    public function guru()
+    {
+        return $this->hasOne(Guru::class, 'id_user', 'id');
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

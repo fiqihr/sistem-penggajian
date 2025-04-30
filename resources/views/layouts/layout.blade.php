@@ -118,12 +118,12 @@
     <!-- Bootstrap & Popper -->
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.min.js"></script> --}}
-
-    <script src="{{ asset('libs/bootstrap/js/bootstrap.min.js') }}"></script>
+    {{-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script> --}}
+    {{-- <script src="{{ asset('libs/bootstrap/js/bootstrap.min.js') }}"></script> --}}
     <script src="{{ asset('libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <!-- Bootstrap core JavaScript-->
     {{-- <script src="{{ asset('libs/bootstrap/vendor/jquery/jquery.min.js') }}"></script> --}}
-    <script src="{{ asset('libs/bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    {{-- <script src="{{ asset('libs/bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script> --}}
 
     <!-- DataTables -->
     <script src="{{ asset('libs/datatables/datatables.min.js') }}"></script>

@@ -3,7 +3,7 @@
 
     <div class="mb-2 d-flex justify-content-end">
         <a href="{{ route('potongan-gaji.create') }}" class="btn btn-primary">
-            <i class="fas fa-plus"></i><span class="small ml-2">Tambah Potongan Gaji</span>
+            <i class="fas fa-plus"></i><span class=" ml-2">Tambah Potongan Gaji</span>
         </a>
     </div>
 

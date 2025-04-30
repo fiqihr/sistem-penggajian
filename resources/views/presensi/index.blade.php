@@ -1,0 +1,57 @@
+<x-layout>
+    <h3 class="mt-5 mb-4">Presensi</h3>
+    {{-- FILTER BULAN --}}
+    <div class="py-4">
+        <p class="block font-weight-bold text-primary">Filter</p>
+        <div class="d-flex justify-content-between">
+            <div class="row">
+                <div class="col-6">
+                    <select id="filter-bulan" class="form-control">
+                        <option value="">-- Semua Bulan --</option>
+                        @foreach ($list_bulan as $bulan)
+                            <option value="{{ str_pad($bulan, 2, '0', STR_PAD_LEFT) }}">{{ formatNamaBulan($bulan) }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-6">
+                    <select id="filter-tahun" class="form-control">
+                        <option value="">-- Semua Tahun --</option>
+                        @foreach ($list_tahun as $tahun)
+                            <option value="{{ $tahun }}">{{ $tahun }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="mb-2 d-flex justify-content-end">
+                <a href="{{ route('presensi.create') }}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i><span class=" ml-2">Tambah Presensi</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid bg-white rounded-lg p-4 shadow-sm mb-5">
+        <table id="my-table" class="table table-bordered table-striped small w-100">
+            <thead id="mytable-thead">
+                <tr>
+                    <th class="text-center">No</th>
+                    <th>Bulan</th>
+                    <th>Nama Guru</th>
+                    <th>Hadir</th>
+                    <th>Sakit</th>
+                    <th>Alpha</th>
+                    <th class="text-center">Aksi</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    @push('scripts')
+        <script>
+            const presensiRoute = "{{ route('presensi.index') }}";
+            const presensiMessage = {!! json_encode(session('berhasil')) !!};
+        </script>
+        <script src="{{ asset('libs/js/presensi.js') }}"></script>
+    @endpush
+</x-layout>

@@ -3,7 +3,6 @@
         <h3 class="">Edit Jabatan</h3>
         <p class="small font-italic">Jabatan &rsaquo; Edit Jabatan</p>
     </div>
-    
     <div class="container-fluid  bg-white rounded-lg p-4 shadow-sm">
         <form action="{{ route('jabatan.update', $data->id_jabatan) }}" method="POST" class="col-lg-8 mx-auto">
             @method('PUT')
