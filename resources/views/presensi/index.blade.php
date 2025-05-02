@@ -2,31 +2,36 @@
     <h3 class="mt-5 mb-4">Presensi</h3>
     {{-- FILTER BULAN --}}
     <div class="py-4">
-        <p class="block font-weight-bold text-primary">Filter</p>
-        <div class="d-flex justify-content-between">
-            <div class="row">
-                <div class="col-6">
-                    <select id="filter-bulan" class="form-control">
-                        <option value="">-- Semua Bulan --</option>
-                        @foreach ($list_bulan as $bulan)
-                            <option value="{{ str_pad($bulan, 2, '0', STR_PAD_LEFT) }}">{{ formatNamaBulan($bulan) }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="col-6">
-                    <select id="filter-tahun" class="form-control">
-                        <option value="">-- Semua Tahun --</option>
-                        @foreach ($list_tahun as $tahun)
-                            <option value="{{ $tahun }}">{{ $tahun }}</option>
-                        @endforeach
-                    </select>
+        <div class="d-flex justify-content-between align-items-end">
+            <div class="bg-white px-4 py-3 rounded-lg shadow-sm">
+                <p class="block font-weight-bold ">Filter</p>
+                <div class="row">
+                    <div class="col-6">
+                        <select id="filter-bulan" class="form-control">
+                            <option value="">-- Semua Bulan --</option>
+                            @foreach ($list_bulan as $bulan)
+                                <option value="{{ str_pad($bulan, 2, '0', STR_PAD_LEFT) }}">
+                                    {{ formatNamaBulan($bulan) }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <select id="filter-tahun" class="form-control">
+                            <option value="">-- Semua Tahun --</option>
+                            @foreach ($list_tahun as $tahun)
+                                <option value="{{ $tahun }}">{{ $tahun }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
             </div>
-            <div class="mb-2 d-flex justify-content-end">
-                <a href="{{ route('presensi.create') }}" class="btn btn-primary">
-                    <i class="fas fa-plus"></i><span class=" ml-2">Tambah Presensi</span>
-                </a>
+            <div class="align-items-end">
+                <div class="mb-2 d-flex justify-content-end">
+                    <a href="{{ route('presensi.create') }}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i><span class=" ml-2">Tambah Presensi</span>
+                    </a>
+                </div>
             </div>
         </div>
     </div>

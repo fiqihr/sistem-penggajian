@@ -99,23 +99,28 @@
     <!-- Nav Item - Tables -->
     <li class="nav-item">
         <a class="nav-link" href="{{ route('guru.index') }}">
-            <i class="fas fa-fw fa-table"></i>
+            <i class="fa-solid fa-user-tie"></i>
             <span>Guru</span></a>
     </li>
     <li class="nav-item">
         <a class="nav-link" href="{{ route('jabatan.index') }}">
-            <i class="fas fa-fw fa-table"></i>
+            <i class="fa-solid fa-briefcase"></i>
             <span>Jabatan</span></a>
     </li>
     <li class="nav-item">
         <a class="nav-link" href="{{ route('presensi.index') }}">
-            <i class="fas fa-fw fa-table"></i>
+            <i class="fa-solid fa-list-check"></i>
             <span>Presensi</span></a>
     </li>
     <li class="nav-item">
         <a class="nav-link" href="{{ route('potongan-gaji.index') }}">
-            <i class="fas fa-fw fa-table"></i>
+            <i class="fa-solid fa-folder-minus"></i>
             <span>Potongan Gaji</span></a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('gaji.index') }}">
+            <i class="fa-solid fa-coins"></i>
+            <span>Gaji</span></a>
     </li>
 
     <!-- Divider -->

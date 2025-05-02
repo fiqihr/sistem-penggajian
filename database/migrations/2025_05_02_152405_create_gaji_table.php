@@ -11,16 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('presensi', function (Blueprint $table) {
-            $table->bigIncrements('id_presensi');
+        Schema::create('gaji', function (Blueprint $table) {
+            $table->bigIncrements('id_gaji');
             $table->string('bulan', 7);
             $table->unsignedBigInteger('id_guru');
-            $table->integer('hadir');
-            $table->integer('sakit');
-            $table->integer('alpha');
+            $table->integer('potongan');
+            $table->integer('total_gaji');
             $table->timestamps();
 
-            // foreign key
+            // fk
             $table->foreign('id_guru')->references('id_guru')->on('guru')->onDelete('cascade');
         });
     }
@@ -30,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('presensi_tabel');
+        Schema::dropIfExists('gaji');
     }
 };

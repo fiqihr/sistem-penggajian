@@ -30,8 +30,8 @@
                     <select class="form-control" name="jenis_kelamin" id="jenis_kelamin">
                         @foreach ($jabatan as $item)
                             <option selected disabled value="">-- Pilih Jenis Kelamin --</option>
-                            <option value="laki-laki">Laki-laki</option>
-                            <option value="perempuan">Perempuan</option>
+                            <option value="Laki-laki">Laki-laki</option>
+                            <option value="Perempuan">Perempuan</option>
                         @endforeach
                     </select>
                 </div>

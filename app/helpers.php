@@ -1,6 +1,7 @@
 <?php
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\App;
 
 if (!function_exists('formatRupiah')) {
   function formatRupiah($angka)
@@ -20,14 +21,24 @@ if (!function_exists('formatBulan')) {
     if (!$bulan) {
       return '-';
     }
+
     try {
       $date = DateTime::createFromFormat('Y-m', $bulan);
-      return $date ? $date->format('F, Y') : '-';
+      if (!$date) {
+        return '-';
+      }
+
+      // Set locale to Indonesian
+      setlocale(LC_TIME, 'id_ID.utf8', 'Indonesian_indonesia.1252');
+
+      // Format bulan dalam bahasa Indonesia
+      return strftime('%B, %Y', $date->getTimestamp());
     } catch (\Exception $e) {
       return '-';
     }
   }
 }
+
 
 if (!function_exists('formatTanggal')) {
   function formatTanggal($tanggal)
