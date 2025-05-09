@@ -1,9 +1,9 @@
 <x-layout>
-    <h3 class="mt-5 mb-4">Potongan Gaji</h3>
+    <h3 class="mt-5 mb-4">Data Gaji Guru</h3>
 
     <div class="mb-2 d-flex justify-content-end">
-        <a href="{{ route('potongan-gaji.create') }}" class="btn btn-primary">
-            <i class="fas fa-plus"></i><span class=" ml-2">Tambah Potongan Gaji</span>
+        <a href="{{ route('gaji.create') }}" class="btn btn-success">
+            <i class="fa-solid fa-clipboard-list"></i><span class=" ml-2">Cetak Slip Gaji</span>
         </a>
     </div>
 

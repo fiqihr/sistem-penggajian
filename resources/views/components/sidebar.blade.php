@@ -122,6 +122,13 @@
             <i class="fa-solid fa-coins"></i>
             <span>Gaji</span></a>
     </li>
+    @if (Auth::user()->hak_akses == 'guru')
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('gaji-saya.index') }}">
+                <i class="fa-solid fa-coins"></i>
+                <span>Gaji Saya</span></a>
+        </li>
+    @endif
 
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">

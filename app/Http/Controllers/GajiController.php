@@ -3,9 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Gaji;
+use App\Models\Guru;
+use App\Models\Jabatan;
+use App\Models\PotonganGaji;
+use App\Models\Presensi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Yajra\DataTables\Facades\DataTables;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class GajiController extends Controller
 {
@@ -44,7 +49,7 @@ class GajiController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     // $showBtn = '<a href="' . route('potongan-gaji.show', $row->id_potongan_gaji) . '" class="btn btn-primary btn-user text-white"><i class="fa-solid fa-eye"></i><span class="ml-2">Detail</span></a>';
-                    $editBtn = '<a href="#" class="ml-2 btn btn-warning text-white"><i class="fa-solid fa-pen-nib"></i><span class="ml-2">Edit</span></a>';
+                    $showBtn = '<a href="' . route('gaji.show', $row->id_gaji) . '" class="ml-2 btn btn-primary text-white"><i class="fa-solid fa-note-sticky"></i><span class="ml-2">Slip</span></a>';
                     // $editBtn = '<a href="' . route('potongan-gaji.edit', $row->id_potongan_gaji) . '" class="ml-2 btn btn-warning text-white"><i class="fa-solid fa-pen-nib"></i><span class="ml-2">Edit</span></a>';
                     // $deleteBtn = '<form id="delete-form-' . $row->id_potongan_gaji . '" action="' . route('potongan-gaji.destroy', $row->id_potongan_gaji) . '" method="POST" style="display:inline;">
                     //     ' . csrf_field() . '
@@ -53,10 +58,10 @@ class GajiController extends Controller
                     //         <i class="fa-solid fa-trash"></i><span class="ml-2 ">Hapus</span>
                     //     </button>
                     // </form>';
-                    $deleteBtn = '<a href="#" class="ml-2 btn btn-danger text-white"><i class="fa-solid fa-pen-nib"></i><span class="ml-2">Edit</span></a>';
+                    $deleteBtn = '<a href="#" class="ml-2 btn btn-warning text-white"> <i class="fas fa-hand-holding-usd"></i><span class="ml-2">Kirim</span></a>';
 
 
-                    return '<div class="text-center">' . $editBtn . $deleteBtn . '</div>';
+                    return '<div class="text-center d-flex">' . $showBtn . $deleteBtn . '</div>';
                 })
                 ->rawColumns(['action'])
                 ->make(true);
@@ -69,7 +74,8 @@ class GajiController extends Controller
      */
     public function create()
     {
-        //
+        $semua_guru = Guru::with('user')->get();
+        return view('gaji.create', compact('semua_guru'));
     }
 
     /**
@@ -77,15 +83,77 @@ class GajiController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $id_guru = $request->id_guru;
+        $gaji = Guru::where('id_guru', $id_guru)->first()->jabatan;
+
+        $gaji_pokok = $gaji->gaji_pokok;
+        $tj_transport = $gaji->tj_transport;
+        $uang_makan = $gaji->uang_makan;
+
+        $jumlahGaji = $gaji_pokok + $tj_transport + $uang_makan;
+
+        $bulan_presensi = $request->bulan;
+        $presensi = Presensi::where('bulan', $bulan_presensi)->where('id_guru', $id_guru)->first();
+
+        $sakit = $presensi->sakit;
+        $alpha = $presensi->alpha;
+
+        $potonganAlpha = PotonganGaji::where('nama_potongan', 'Alpha')->first()->jml_potongan;
+        $potonganSakit = PotonganGaji::where('nama_potongan', 'Sakit')->first()->jml_potongan;
+
+        $jmlPotonganAlpha = $potonganAlpha * $alpha;
+        $jmlPotonganSakit = $potonganSakit * $sakit;
+
+        $totalPotongan = $jmlPotonganAlpha + $jmlPotonganSakit;
+        $totalGaji = $jumlahGaji - $totalPotongan;
+
+        $simpan = Gaji::create([
+            'bulan' => $request->bulan,
+            'id_guru' => $request->id_guru,
+            'potongan' => $totalPotongan,
+            'total_gaji' => $totalGaji
+        ]);
+        if ($simpan) {
+            session()->flash('berhasil', 'Gaji Guru berhasil dicetak!');
+            return redirect()->route('gaji.index');
+        } else {
+            return redirect()->back();
+        }
     }
+
 
     /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
-        //
+        $gaji = Gaji::with('guru', 'jabatan')->where('id_gaji', $id)->first();
+
+        $bulan_presensi = $gaji->bulan;
+        $id_guru = $gaji->id_guru;
+        $presensi = Presensi::where('bulan', $bulan_presensi)->where('id_guru', $id_guru)->first();
+
+        $sakit = $presensi->sakit;
+        $alpha = $presensi->alpha;
+
+        $potonganAlpha = PotonganGaji::where('nama_potongan', 'Alpha')->first()->jml_potongan;
+        $potonganSakit = PotonganGaji::where('nama_potongan', 'Sakit')->first()->jml_potongan;
+
+        $jmlPotonganAlpha = $potonganAlpha * $alpha;
+        $jmlPotonganSakit = $potonganSakit * $sakit;
+
+        // dd($alpha, $sakit, $jmlPotonganAlpha, $jmlPotonganSakit);
+
+        $pdf = Pdf::loadView('gaji.slip', [
+            'gaji' => $gaji,
+            'alpha' => $alpha,
+            'sakit' => $sakit,
+            'jmlPotonganAlpha' => $jmlPotonganAlpha,
+            'jmlPotonganSakit' => $jmlPotonganSakit,
+        ])->setPaper('A4', 'portrait');
+
+        return $pdf->stream('Slip-Gaji.pdf');
+        // return view('gaji.slip', compact('gaji', 'alpha', 'sakit', 'jmlPotonganAlpha', 'jmlPotonganSakit'));
     }
 
     /**

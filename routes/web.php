@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\GajiController;
+use App\Http\Controllers\GajiSayaController;
 use App\Http\Controllers\GuruController;
 use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\PotonganGajiController;
@@ -31,6 +32,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('/guru', GuruController::class);
     Route::resource('/presensi', PresensiController::class);
     Route::resource('/gaji', GajiController::class);
+    Route::resource('/gaji-saya', GajiSayaController::class);
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
