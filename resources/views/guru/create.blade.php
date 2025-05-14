@@ -28,11 +28,9 @@
                 <div class="form-group col-md-6 pl-md-2">
                     <label for="jenis_kelamin">Jenis Kelamin</label>
                     <select class="form-control" name="jenis_kelamin" id="jenis_kelamin">
-                        @foreach ($jabatan as $item)
-                            <option selected disabled value="">-- Pilih Jenis Kelamin --</option>
-                            <option value="Laki-laki">Laki-laki</option>
-                            <option value="Perempuan">Perempuan</option>
-                        @endforeach
+                        <option selected disabled value="">-- Pilih Jenis Kelamin --</option>
+                        <option value="Laki-laki">Laki-laki</option>
+                        <option value="Perempuan">Perempuan</option>
                     </select>
                 </div>
                 <div class="form-group col-md-6 pl-md-2">
@@ -49,8 +47,8 @@
                 <div class="form-group col-md-6 pl-md-2">
                     <label for="id_jabatan">Jabatan</label>
                     <select class="form-control" name="id_jabatan" id="id_jabatan">
+                        <option selected disabled value="">-- Pilih Jabatan --</option>
                         @foreach ($jabatan as $item)
-                            <option selected disabled value="">-- Pilih Jabatan --</option>
                             <option value="{{ $item->id_jabatan }}">{{ $item->nama_jabatan }}</option>
                         @endforeach
                     </select>

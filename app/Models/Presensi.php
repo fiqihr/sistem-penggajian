@@ -10,6 +10,7 @@ class Presensi extends Model
     use HasFactory;
     protected $table = 'presensi';
     protected $primaryKey = 'id_presensi';
+    protected $guarded = [];
 
     public function guru()
     {

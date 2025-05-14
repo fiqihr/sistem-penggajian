@@ -3,11 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\Guru;
+use App\Models\Jabatan;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
@@ -16,26 +20,87 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
+        $idGuru = Auth::user()->id;
+        $guru = Guru::with('user', 'jabatan')->where('id_user', $idGuru)->first();
+        $jabatan = Jabatan::all();
         return view('profile.edit', [
             'user' => $request->user(),
+            'guru' => $guru,
+            'jabatan' => $jabatan
         ]);
     }
 
     /**
      * Update the user's profile information.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
-    {
-        $request->user()->fill($request->validated());
+    // public function update(ProfileUpdateRequest $request): RedirectResponse
+    // {
+    //     $request->user()->fill($request->validated());
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+    //     if ($request->user()->isDirty('email')) {
+    //         $request->user()->email_verified_at = null;
+    //     }
+
+    //     $request->user()->save();
+
+    //     return Redirect::route('profile.edit')->with('status', 'profile-updated');
+    // }
+    public function update(Request $request)
+    {
+        $idUser = Auth::user()->id;
+        $request->validate([
+            'name' => ['string'],
+            'email' => ['email'],
+            'jenis_kelamin' => [],
+        ]);
+
+        $updateUser = User::find($idUser);
+        $updateUser->update([
+            'name' => $request->name,
+            'email' => $request->email,
+        ]);
+
+        $updateGuru = Guru::where('id_user', $idUser)->first();
+        $updateGuru->update([
+            'jenis_kelamin' => $request->jenis_kelamin,
+        ]);
+
+        if ($updateUser && $updateGuru) {
+            session()->flash('berhasil', 'Profil berhasil diupdate!');
+            return redirect()->route('profile.edit');
+        } else {
+            return redirect()->back();
+        }
+    }
+
+
+
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => ['required'],
+            'new_password' => ['required', 'min:8', 'confirmed'],
+        ]);
+
+        $user = Auth::user();
+
+        // pastikan current password cocok
+        if (!Hash::check($request->current_password, $user->password)) {
+            return back()->withErrors(['current_password' => 'Password saat ini salah.']);
         }
 
-        $request->user()->save();
+        $updatePassword = $user->update([
+            'password' => Hash::make($request->new_password),
+        ]);
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        if ($updatePassword) {
+            session()->flash('berhasil', 'Password berhasil diupdate!');
+            return redirect()->route('profile.edit');
+        } else {
+            return redirect()->back();
+        }
     }
+
 
     /**
      * Delete the user's account.

@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Yajra\DataTables\Facades\DataTables;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
 
 class GajiController extends Controller
 {
@@ -49,7 +50,7 @@ class GajiController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     // $showBtn = '<a href="' . route('potongan-gaji.show', $row->id_potongan_gaji) . '" class="btn btn-primary btn-user text-white"><i class="fa-solid fa-eye"></i><span class="ml-2">Detail</span></a>';
-                    $showBtn = '<a href="' . route('gaji.show', $row->id_gaji) . '" class="ml-2 btn btn-primary text-white"><i class="fa-solid fa-note-sticky"></i><span class="ml-2">Slip</span></a>';
+                    $showBtn = '<a href="' . route('gaji.show', $row->id_gaji) . '" class="ml-2 btn btn-primary text-white d-flex align-items-center"><i class="fa-solid fa-note-sticky"></i><span class="ml-2">Slip</span></a>';
                     // $editBtn = '<a href="' . route('potongan-gaji.edit', $row->id_potongan_gaji) . '" class="ml-2 btn btn-warning text-white"><i class="fa-solid fa-pen-nib"></i><span class="ml-2">Edit</span></a>';
                     // $deleteBtn = '<form id="delete-form-' . $row->id_potongan_gaji . '" action="' . route('potongan-gaji.destroy', $row->id_potongan_gaji) . '" method="POST" style="display:inline;">
                     //     ' . csrf_field() . '
@@ -58,10 +59,25 @@ class GajiController extends Controller
                     //         <i class="fa-solid fa-trash"></i><span class="ml-2 ">Hapus</span>
                     //     </button>
                     // </form>';
-                    $deleteBtn = '<a href="#" class="ml-2 btn btn-warning text-white"> <i class="fas fa-hand-holding-usd"></i><span class="ml-2">Kirim</span></a>';
+
+                    //                 $kirimBtn = '
+                    // <form id="kirim-form-' . $row->id_gaji . '" action="' . route('gaji.kirim', $row->id_gaji) . '" method="POST" style="display: inline;">
+                    //     ' . csrf_field() . '
+                    //     <button type="button" onclick="kirimGaji(' . $row->id_gaji . ')" class="ml-2 btn btn-warning text-white">
+                    //         <i class="fas fa-hand-holding-usd"></i><span class="ml-2">Kirim</span>
+                    //     </button>
+                    // </form>';
+                    $cekStatusGaji = $row->status;
+                    if ($cekStatusGaji == 'belum') {
+                        $kirimBtn = '<button onclick="kirimGaji(' . $row->id_gaji . ')" class="ml-2 btn btn-warning text-white d-flex align-items-center"><i class="fa-solid fa-money-check-dollar"></i><span class="ml-2">Kirim</span></button>';
+                    } elseif ($cekStatusGaji == 'dikirim') {
+                        $kirimBtn = '<button class="ml-2 btn btn-info text-white d-flex align-items-center"><i class="fa-solid fa-hand-holding-dollar"></i><span class="ml-2">Dikirim</span></button>';
+                    } else {
+                        $kirimBtn = '<button class="ml-2 btn btn-success text-white d-flex align-items-center"><i class="fa-solid fa-check"></i><span class="ml-2">Selesai</span></button>';
+                    }
 
 
-                    return '<div class="text-center d-flex">' . $showBtn . $deleteBtn . '</div>';
+                    return '<div class="text-center d-flex">' . $showBtn . $kirimBtn . '</div>';
                 })
                 ->rawColumns(['action'])
                 ->make(true);
@@ -133,14 +149,18 @@ class GajiController extends Controller
         $id_guru = $gaji->id_guru;
         $presensi = Presensi::where('bulan', $bulan_presensi)->where('id_guru', $id_guru)->first();
 
-        $sakit = $presensi->sakit;
-        $alpha = $presensi->alpha;
+        $sakit = $presensi->sakit ?? 0;
+        $alpha = $presensi->alpha ?? 0;
 
         $potonganAlpha = PotonganGaji::where('nama_potongan', 'Alpha')->first()->jml_potongan;
         $potonganSakit = PotonganGaji::where('nama_potongan', 'Sakit')->first()->jml_potongan;
 
         $jmlPotonganAlpha = $potonganAlpha * $alpha;
         $jmlPotonganSakit = $potonganSakit * $sakit;
+
+        if (Auth::user()->hak_akses == 'guru') {
+            Gaji::where('id_gaji', $id)->update(['status' => 'diterima']);
+        }
 
         // dd($alpha, $sakit, $jmlPotonganAlpha, $jmlPotonganSakit);
 
@@ -178,5 +198,15 @@ class GajiController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function kirimGaji(string $id)
+    {
+        $kirim = Gaji::where('id_gaji', $id)->update(['status' => 'dikirim']);
+        if ($kirim) {
+            return response()->json(['message' => 'Slip Gaji Guru berhasil dikirim!']);
+        } else {
+            return response()->json(['message' => 'Gagal mengirim slip gaji.'], 500);
+        }
     }
 }

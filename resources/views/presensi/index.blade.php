@@ -29,7 +29,7 @@
             <div class="align-items-end">
                 <div class="mb-2 d-flex justify-content-end">
                     <a href="{{ route('presensi.create') }}" class="btn btn-primary">
-                        <i class="fas fa-plus"></i><span class=" ml-2">Tambah Presensi</span>
+                        <i class="fas fa-plus"></i><span class=" ml-2">Isi Presensi</span>
                     </a>
                 </div>
             </div>

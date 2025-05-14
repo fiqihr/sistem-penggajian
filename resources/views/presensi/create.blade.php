@@ -1,62 +1,56 @@
 <x-layout>
     <div class="mt-5 mb-4">
-        <h3 class="">Tambah Jabatan</h3>
-        <p class="small font-italic">Jabatan &rsaquo; Tambah Jabatan</p>
+        <h3 class="">Isi presensi</h3>
+        <p class="small font-italic">presensi &rsaquo; Isi presensi</p>
     </div>
     <div class="container-fluid  bg-white rounded-lg p-4 shadow-sm">
-        <form action="{{ route('jabatan.store') }}" method="POST" class="col-lg-8 mx-auto">
+        <form action="{{ route('presensi.store') }}" method="POST" class="col-lg-8 mx-auto">
             @csrf
-            <div class="mb-4">
-                <label for="nama_jabatan" class="form-label">Nama Jabatan</label>
-                <input id="nama_jabatan" type="text" name="nama_jabatan" id="nama_jabatan"
-                    class="form-control @error('nama_jabatan') is-invalid @enderror" value="{{ old('nama_jabatan') }}"
-                    required placeholder="Masukkan nama jabatan...">
-                @error('nama_jabatan')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-            </div>
-            <div class="mb-4">
-                <label for="gaji_pokok" class="form-label">Gaji Pokok</label>
-                <div class="input-group mb-2">
-                    <div class="input-group-prepend">
-                        <div class="input-group-text">Rp.</div>
-                    </div>
-                    <input id="gaji_pokok" type="number" name="gaji_pokok" id="gaji_pokok"
-                        class="form-control @error('gaji_pokok') is-invalid @enderror" value="{{ old('gaji_pokok') }}"
-                        required placeholder="Masukkan gaji pokok...">
-                    @error('gaji_pokok')
+
+            <div class="form-row mb-2">
+                <div class="form-group col-md-6 pl-md-2">
+                    <label for="bulan">Bulan, Tahun</label>
+                    <input id="bulan" type="month" name="bulan" id="bulan"
+                        class="form-control @error('bulan') is-invalid @enderror" value="{{ old('bulan') }}" required
+                        placeholder="Masukkan bulan guru...">
+                    @error('bulan')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
-            </div>
-            <div class="mb-4 d-flex">
-                <div class="flex-fill mr-2">
-                    <label for="tj_transport" class="form-label">Tunjangan Transport</label>
-                    <div class="input-group mb-2">
-                        <div class="input-group-prepend">
-                            <div class="input-group-text">Rp.</div>
-                        </div>
-                        <input id="tj_transport" type="number" name="tj_transport" id="tj_transport"
-                            class="form-control @error('tj_transport') is-invalid @enderror"
-                            value="{{ old('tj_transport') }}" required placeholder="Masukkan tunjangan transport...">
-                        @error('tj_transport')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
+                <div class="form-group col-md-6 pl-md-2">
+                    <label for="id_guru">Nama Guru</label>
+                    <select class="form-control" name="id_guru" id="id_guru">
+                        <option selected disabled value="">-- Pilih Guru --</option>
+                        @foreach ($guru as $item)
+                            <option value="{{ $item->id_guru }}">{{ $item->user->name }}</option>
+                        @endforeach
+                    </select>
                 </div>
-                <div class="flex-fill">
-                    <label for="uang_makan" class="form-label">Uang Makan</label>
-                    <div class="input-group mb-2">
-                        <div class="input-group-prepend">
-                            <div class="input-group-text">Rp.</div>
-                        </div>
-                        <input id="uang_makan" type="number" name="uang_makan" id="uang_makan"
-                            class="form-control @error('uang_makan') is-invalid @enderror"
-                            value="{{ old('uang_makan') }}" required placeholder="Masukkan uang makan...">
-                        @error('uang_makan')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
+            </div>
+            <div class="form-row mb-2">
+                <div class="form-group col-md-4 pl-md-2">
+                    <label for="hadir">Jumlah Hadir</label>
+                    <input id="hadir" type="number" name="hadir" id="hadir"
+                        class="form-control @error('hadir') is-invalid @enderror" value="{{ old('hadir') }}" required>
+                    @error('hadir')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="form-group col-md-4 pl-md-2">
+                    <label for="sakit">Jumlah Sakit</label>
+                    <input id="sakit" type="number" name="sakit" id="sakit"
+                        class="form-control @error('sakit') is-invalid @enderror" value="{{ old('sakit') }}" required>
+                    @error('sakit')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="form-group col-md-4 pl-md-2">
+                    <label for="id_guru">Jumlah Alpha</label>
+                    <input id="alpha" type="number" name="alpha" id="alpha"
+                        class="form-control @error('alpha') is-invalid @enderror" value="{{ old('alpha') }}" required>
+                    @error('alpha')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
             </div>
             <hr class="mb-4 mt-4">

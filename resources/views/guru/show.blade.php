@@ -6,8 +6,8 @@
     <div class="container-fluid  bg-white rounded-lg p-4 shadow-sm mb-5">
         <div class="d-flex">
             <div class="col-md-4 d-flex justify-content-center align-items-center" style="padding: 1rem;">
-                <img src="{{ asset('storage/images/' . $guru->photo) }}" alt="Profile"
-                    class="img-fluid rounded-lg shadow" style=" width: 100%; object-fit: cover;">
+                <img src="{{ asset('storage/images/' . $guru->photo) }}" alt="Profile" class="img-fluid rounded-lg shadow"
+                    style=" width: 100%; object-fit: cover;">
             </div>
 
             <div class="col-md-8 pl-md-2">

@@ -57,7 +57,13 @@ class GajiSayaController extends Controller
                     //         <i class="fa-solid fa-trash"></i><span class="ml-2 ">Hapus</span>
                     //     </button>
                     // </form>';
-                    $cetakBtn = '<a href="' . route('gaji.show', $row->id_gaji) . '" class="ml-2 btn btn-success text-white"><i class="fa-solid fa-print"></i><span class="ml-2">Cetak</span></a>';
+                    if ($row->status == 'belum') {
+                        $cetakBtn = '<a disabled class="ml-2 btn btn-secondary text-white"><i class="fa-solid fa-print"></i><span class="ml-2">Cetak</span></a>';
+                    } else if ($row->status == 'dikirim') {
+                        $cetakBtn = '<a href="' . route('gaji.show', $row->id_gaji) . '" class="ml-2 btn btn-warning text-white"><i class="fa-solid fa-print"></i><span class="ml-2">Cetak</span></a>';
+                    } else {
+                        $cetakBtn = '<a href="' . route('gaji.show', $row->id_gaji) . '" class="ml-2 btn btn-success text-white"><i class="fa-solid fa-file-circle-check"></i><span class="ml-2">Dilihat</span></a>';
+                    }
 
 
                     return '<div class="text-center">' . $cetakBtn . '</div>';

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GajiController;
 use App\Http\Controllers\GajiSayaController;
 use App\Http\Controllers\GuruController;
@@ -7,6 +8,9 @@ use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\PotonganGajiController;
 use App\Http\Controllers\PresensiController;
 use App\Http\Controllers\ProfileController;
+use App\Models\Gaji;
+use App\Models\Guru;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/', function () {
@@ -17,9 +21,7 @@ Route::get('/coba', function () {
     return view('coba');
 })->name('coba');
 
-Route::get('/', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::post('/guru/{id}/upload-photo', [GuruController::class, 'uploadPhoto'])->name('guru.uploadPhoto');
 
@@ -27,6 +29,7 @@ Route::middleware('auth')->group(function () {
     // Route::get('/', function () {
     //     return view('dashboard');
     // })->name('dashboard');
+    Route::post('/kirim-gaji/{id}', [GajiController::class, 'kirimGaji'])->name('gaji.kirim');
     Route::resource('/potongan-gaji', PotonganGajiController::class);
     Route::resource('/jabatan', JabatanController::class);
     Route::resource('/guru', GuruController::class);
@@ -34,7 +37,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('/gaji', GajiController::class);
     Route::resource('/gaji-saya', GajiSayaController::class);
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/update-password', [ProfileController::class, 'updatePassword'])->name('profile.updatePassword');
+    Route::put('/profile/{id}', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 

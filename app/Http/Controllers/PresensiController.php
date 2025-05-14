@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Guru;
 use App\Models\Presensi;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -103,7 +104,8 @@ class PresensiController extends Controller
      */
     public function create()
     {
-        //
+        $guru = Guru::with('user')->get();
+        return view('presensi.create', compact('guru'));
     }
 
     /**
@@ -111,7 +113,28 @@ class PresensiController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'bulan' => 'required',
+            'id_guru' => 'required',
+            'hadir' => 'required|numeric',
+            'sakit' => 'required|numeric',
+            'alpha' => 'required|numeric',
+        ]);
+
+        $simpan = Presensi::create([
+            'bulan' => $request->bulan,
+            'id_guru' => $request->id_guru,
+            'hadir' => $request->hadir,
+            'sakit' => $request->sakit,
+            'alpha' => $request->alpha
+        ]);
+
+        if ($simpan) {
+            session()->flash('berhasil', 'Presensi berhasil disimpan!');
+            return redirect()->route('presensi.index');
+        } else {
+            return redirect()->back();
+        }
     }
 
     /**

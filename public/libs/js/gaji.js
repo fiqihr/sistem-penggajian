@@ -109,3 +109,64 @@ function deleteGaji(id) {
         }
     });
 }
+
+function kirimGaji(id) {
+    const url = gajiKirim.replace(":id", id);
+    Swal.fire({
+        text: "Serahkan slip gaji?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3B82F6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Ya",
+        cancelButtonText: "Batal",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({ id: id })
+            })
+            .then(response => response.json())
+            .then(data => {
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    text: data.message || "Slip gaji berhasil dikirim!",
+                    showConfirmButton: false,
+                    timer: 1500,
+                });
+                setTimeout(function () {
+                    location.reload();
+                }, 1500);
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                Swal.fire({
+                    icon: "error",
+                    text: "Terjadi kesalahan saat mengirim slip gaji.",
+                });
+            });
+        }
+    });
+}
+
+
+// function kirimGaji(id) {
+//     Swal.fire({
+//         text: "Apakah Anda yakin akan mengirim slip gaji?",
+//         icon: "warning",
+//         showCancelButton: true,
+//         confirmButtonColor: "#d33",
+//         cancelButtonColor: "#3B82F6",
+//         confirmButtonText: "Kirim",
+//         cancelButtonText: "Batal",
+//     }).then((result) => {
+//         if (result.isConfirmed) {
+//             document.getElementById("kirim-form-" + id).submit();
+//         }
+//     });
+// }

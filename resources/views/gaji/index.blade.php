@@ -31,6 +31,7 @@
         <script>
             const gajiRoute = "{{ route('gaji.index') }}";
             const gajiMessage = {!! json_encode(session('berhasil')) !!};
+            const gajiKirim = "{{ route('gaji.kirim', ':id') }}";
         </script>
         <script src="{{ asset('libs/js/gaji.js') }}"></script>
     @endpush
