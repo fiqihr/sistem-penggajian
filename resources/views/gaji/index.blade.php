@@ -2,13 +2,13 @@
     <h3 class="mt-5 mb-4">Data Gaji Guru</h3>
 
     <div class="mb-2 d-flex justify-content-end">
-        <a href="{{ route('gaji.create') }}" class="btn btn-success">
-            <i class="fa-solid fa-clipboard-list"></i><span class=" ml-2">Cetak Slip Gaji</span>
+        <a href="{{ route('gaji.create') }}" class="btn btn-info">
+            <i class="fa-solid fa-clipboard-list"></i><span class=" ml-2">Buat Slip Gaji</span>
         </a>
     </div>
 
     <div class="container-fluid bg-white rounded-lg p-4 shadow-sm mb-5">
-        <table id="my-table" class="table table-bordered table-striped small w-100">
+        <table id="my-table" class="table table-bordered table-striped small w-100 text-nowrap">
             <thead id="mytable-thead">
                 <tr>
                     <th class="text-center">No</th>

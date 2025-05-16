@@ -34,7 +34,7 @@
             </div>
             <hr class="mb-4 mt-4">
             <!-- Submit -->
-            <button type="submit" class=" btn btn-primary btn-user btn-block">
+            <button type="submit" class=" btn btn-success btn-user btn-block">
                 Login
             </button>
         </form>

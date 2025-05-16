@@ -93,7 +93,62 @@
                         </div>
                     </div>
                 </div>
+
             </div>
+            <div class="row">
+                <div class="col-8">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Data Guru Berdasarkan Gender</h6>
+                        </div>
+                        <div class="card-body">
+                            <h4 class="small font-weight-bold">
+                                Laki-laki ({{ $jumlahLaki }} orang)
+                                <span class="float-right">{{ $persenLaki }}%</span>
+                            </h4>
+                            <div class="progress mb-4">
+                                <div class="progress-bar bg-warning" role="progressbar"
+                                    style="width: {{ $persenLaki }}%" aria-valuenow="{{ $persenLaki }}"
+                                    aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <h4 class="small font-weight-bold">Perempuan ({{ $jumlahPerempuan }} orang) <span
+                                    class="float-right">{{ $persenPerempuan }}%</span></h4>
+                            <div class="progress mb-4">
+                                <div class="progress-bar bg-danger" role="progressbar"
+                                    style="width: {{ $persenPerempuan }}%" aria-valuenow="{{ $persenPerempuan }}"
+                                    aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="card shadow mb-4">
+                        <!-- Card Header - Dropdown -->
+                        <div class="card-header py-3 ">
+                            <h6 class="m-0 font-weight-bold text-primary">Status Guru</h6>
+                        </div>
+                        <!-- Card Body -->
+                        <div class="card-body">
+                            <div class="chart-pie pt-4 pb-2">
+                                <canvas id="myPieChart"></canvas>
+                            </div>
+                            <div class="mt-4 text-center small">
+                                <span class="mr-2">
+                                    <i class="fas fa-circle text-success"></i> Guru Tidak Tetap
+                                </span>
+                                <span class="mr-2">
+                                    <i class="fas fa-circle text-primary"></i> Guru Tetap
+                                </span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
         </div>
     @elseif ($akses === 'guru')
         <div class="container-fluid  rounded-lg p-2 overflow-hidden">
@@ -146,5 +201,49 @@
 
         </div>
     @endif
+    {{-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> --}}
+    <script src="{{ asset('libs/bootstrap/vendor/chart.js/Chart.min.js') }}"></script>
+    <script>
+        const ctx = document.getElementById("myPieChart");
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                // kosongkan label agar tidak muncul sebagai label chart
+                labels: [],
+                datasets: [{
+                    data: [{{ $guruTetap }}, {{ $guruTidakTetap }}],
+                    backgroundColor: ['#3B82F6', '#10B981'],
+                    hoverBackgroundColor: ['#2563EB', '#059669'],
+                    hoverBorderColor: "rgba(234, 236, 244, 1)",
+                }],
+            },
+            options: {
+                maintainAspectRatio: false,
+                tooltips: {
+                    backgroundColor: "rgb(255,255,255)",
+                    bodyFontColor: "#858796",
+                    borderColor: '#dddfeb',
+                    borderWidth: 1,
+                    xPadding: 15,
+                    yPadding: 15,
+                    displayColors: false,
+                    caretPadding: 10,
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+                            // Ambil data value
+                            const value = data.datasets[0].data[tooltipItem.index];
+                            // Buat label manual berdasarkan index
+                            const customLabels = ['Guru Tetap', 'Guru Tidak Tetap'];
+                            return `${customLabels[tooltipItem.index]}: ${value}`;
+                        }
+                    }
+                },
+                legend: {
+                    display: false
+                },
+                cutoutPercentage: 60,
+            }
+        });
+    </script>
 
 </x-layout>

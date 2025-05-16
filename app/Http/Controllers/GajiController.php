@@ -50,12 +50,12 @@ class GajiController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     // $showBtn = '<a href="' . route('potongan-gaji.show', $row->id_potongan_gaji) . '" class="btn btn-primary btn-user text-white"><i class="fa-solid fa-eye"></i><span class="ml-2">Detail</span></a>';
-                    $showBtn = '<a href="' . route('gaji.show', $row->id_gaji) . '" class="ml-2 btn btn-primary text-white d-flex align-items-center"><i class="fa-solid fa-note-sticky"></i><span class="ml-2">Slip</span></a>';
+                    $showBtn = '<a href="' . route('gaji.show', $row->id_gaji) . '" class="ml-2 btn btn-primary text-white d-flex align-items-center"><i class="fa-solid fa-note-sticky"></i><span class="ml-2">Lihat</span></a>';
                     // $editBtn = '<a href="' . route('potongan-gaji.edit', $row->id_potongan_gaji) . '" class="ml-2 btn btn-warning text-white"><i class="fa-solid fa-pen-nib"></i><span class="ml-2">Edit</span></a>';
-                    // $deleteBtn = '<form id="delete-form-' . $row->id_potongan_gaji . '" action="' . route('potongan-gaji.destroy', $row->id_potongan_gaji) . '" method="POST" style="display:inline;">
+                    // $deleteBtn = '<form id="delete-form-' . $row->id_gaji . '" action="' . route('gaji.destroy', $row->id_gaji) . '" method="POST" style="display:inline;">
                     //     ' . csrf_field() . '
                     //     ' . method_field('DELETE') . '
-                    //     <button type="button" onclick="deleteClient(' . $row->id_potongan_gaji . ')" class="btn btn-danger">
+                    //     <button type="button" onclick="deleteGaji(' . $row->id_gaji . ')" class="btn btn-danger">
                     //         <i class="fa-solid fa-trash"></i><span class="ml-2 ">Hapus</span>
                     //     </button>
                     // </form>';
@@ -77,7 +77,7 @@ class GajiController extends Controller
                     }
 
 
-                    return '<div class="text-center d-flex">' . $showBtn . $kirimBtn . '</div>';
+                    return '<div class="text-center d-flex">' . $showBtn . $kirimBtn .  '</div>';
                 })
                 ->rawColumns(['action'])
                 ->make(true);
@@ -197,7 +197,13 @@ class GajiController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $hapus = Gaji::where('id_gaji', $id)->delete();
+        if ($hapus) {
+            session()->flash('berhasil', 'Gaji berhasil dihapus!');
+            return redirect()->route('gaji.index');
+        } else {
+            return redirect()->back();
+        }
     }
 
     public function kirimGaji(string $id)

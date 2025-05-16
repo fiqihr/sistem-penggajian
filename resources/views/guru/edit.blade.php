@@ -48,9 +48,9 @@
                             <label for="jenis_kelamin">Jenis Kelamin</label>
                             <select class="form-control" name="jenis_kelamin" id="jenis_kelamin">
                                 <option disabled value="">-- Pilih Jenis Kelamin --</option>
-                                <option {{ $guru->jenis_kelamin == 'laki-laki' ? 'selected' : '' }} value="laki-laki">
+                                <option {{ $guru->jenis_kelamin == 'Laki-laki' ? 'selected' : '' }} value="Laki-laki">
                                     Laki-laki</option>
-                                <option {{ $guru->jenis_kelamin == 'perempuan' ? 'selected' : '' }} value="perempuan">
+                                <option {{ $guru->jenis_kelamin == 'Perempuan' ? 'selected' : '' }} value="Perempuan">
                                     Perempuan</option>
                             </select>
                         </div>
