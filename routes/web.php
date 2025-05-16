@@ -30,6 +30,10 @@ Route::middleware('auth')->group(function () {
     //     return view('dashboard');
     // })->name('dashboard');
     Route::post('/kirim-gaji/{id}', [GajiController::class, 'kirimGaji'])->name('gaji.kirim');
+    Route::get('/laporan-gaji', [GajiController::class, 'laporanGajiIndex'])->name('gaji.laporan');
+    Route::post('/laporan-gaji/cetak', [GajiController::class, 'laporanGajiCetak'])->name('gaji.laporan.cetak');
+    Route::get('/laporan-presensi', [PresensiController::class, 'laporanPresensiIndex'])->name('presensi.laporan');
+    Route::post('/laporan-presensi/cetak', [PresensiController::class, 'laporanPresensiCetak'])->name('presensi.laporan.cetak');
     Route::resource('/potongan-gaji', PotonganGajiController::class);
     Route::resource('/jabatan', JabatanController::class);
     Route::resource('/guru', GuruController::class);

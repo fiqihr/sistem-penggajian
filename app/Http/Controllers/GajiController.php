@@ -215,4 +215,23 @@ class GajiController extends Controller
             return response()->json(['message' => 'Gagal mengirim slip gaji.'], 500);
         }
     }
+
+    public function laporanGajiIndex()
+    {
+        return view('laporan.lap-gaji');
+    }
+
+    public function laporanGajiCetak(Request $request)
+    {
+        $bulan = $request->bulan;
+        $semuaGaji = Gaji::where('bulan', $bulan)->get();
+        $fileName = 'Laporan-gaji-' . formatBulan($bulan) . '.pdf';
+        // dd($semuaGaji);
+        $pdf = Pdf::loadView('laporan.lap-gaji-cetak', [
+            'bulan' => $bulan,
+            'semuaGaji' => $semuaGaji,
+        ])->setPaper('A4', 'portrait');
+
+        return $pdf->stream($fileName);
+    }
 }

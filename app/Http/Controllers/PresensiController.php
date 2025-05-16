@@ -7,6 +7,7 @@ use App\Models\Presensi;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\DB; // Tambahkan ini kalau belum ada
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PresensiController extends Controller
 {
@@ -167,5 +168,22 @@ class PresensiController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+    public function laporanPresensiIndex()
+    {
+        return view('laporan.lap-presensi');
+    }
+
+    public function laporanPresensiCetak(Request $request)
+    {
+        $bulan = $request->bulan;
+        $semuaPresensi = Presensi::where('bulan', $bulan)->get();
+        $fileName = 'Laporan-presensi-' . formatBulan($bulan) . '.pdf';
+        $pdf = Pdf::loadView('laporan.lap-presensi-cetak', [
+            'bulan' => $bulan,
+            'semuaPresensi' => $semuaPresensi,
+        ])->setPaper('A4', 'portrait');
+
+        return $pdf->stream($fileName);
     }
 }
