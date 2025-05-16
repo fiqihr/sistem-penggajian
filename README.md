@@ -15,34 +15,34 @@
     ```
 2. Buka proyek menggunakan vscode, lalu ketikkan perintah berikut di terminal vscode
 
-```
-composer install
-```
+    ```
+    composer install
+    ```
 
-```
-php artisan key:generate
-```
+    ```
+    php artisan key:generate
+    ```
 
-3. Ubah file `env.example` menjadi `.env` dan sesuaikan konfigurasi database nya <br>
+3. Ubah file `env.example` menjadi `.env` dan sesuaikan konfigurasi database nya. <br>
    biasanya seperti ini jika menggunakan mysql di xampp.
 
-```
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=sistem_penggajian
-DB_USERNAME=root
-DB_PASSWORD=
-```
+    ```
+    DB_CONNECTION=mysql
+    DB_HOST=127.0.0.1
+    DB_PORT=3306
+    DB_DATABASE=sistem_penggajian
+    DB_USERNAME=root
+    DB_PASSWORD=
+    ```
 
 4. Ketik perintah berikut di terminal vscode
 
-```
-php artisan migrate
-```
+    ```
+    php artisan migrate
+    ```
 
 5. Jalankan proyek
 
-```
-php artisan serve
-```
+    ```
+    php artisan serve
+    ```
