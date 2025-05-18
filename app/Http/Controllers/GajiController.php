@@ -7,6 +7,7 @@ use App\Models\Guru;
 use App\Models\Jabatan;
 use App\Models\PotonganGaji;
 use App\Models\Presensi;
+use App\Models\Tunjangan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Yajra\DataTables\Facades\DataTables;
@@ -35,12 +36,6 @@ class GajiController extends Controller
                 })
                 ->editColumn('gaji_pokok', function ($row) {
                     return formatRupiah($row->guru->jabatan->gaji_pokok);
-                })
-                ->editColumn('tj_transport', function ($row) {
-                    return formatRupiah($row->guru->jabatan->tj_transport);
-                })
-                ->editColumn('uang_makan', function ($row) {
-                    return formatRupiah($row->guru->jabatan->uang_makan);
                 })
                 ->editColumn('potongan', function ($row) {
                     return formatRupiah($row->potongan);
@@ -91,6 +86,7 @@ class GajiController extends Controller
     public function create()
     {
         $semua_guru = Guru::with('user')->get();
+        $semua_potongan = PotonganGaji::all();
         return view('gaji.create', compact('semua_guru'));
     }
 
@@ -100,42 +96,71 @@ class GajiController extends Controller
     public function store(Request $request)
     {
         $id_guru = $request->id_guru;
-        $gaji = Guru::where('id_guru', $id_guru)->first()->jabatan;
+        $bulan = $request->bulan;
+        $jml_tunjangan = $request->jml_tunjangan;
+        $potongan = $request->total_potongan;
+        $total_gaji = $request->total_gaji;
 
-        $gaji_pokok = $gaji->gaji_pokok;
-        $tj_transport = $gaji->tj_transport;
-        $uang_makan = $gaji->uang_makan;
-
-        $jumlahGaji = $gaji_pokok + $tj_transport + $uang_makan;
-
-        $bulan_presensi = $request->bulan;
-        $presensi = Presensi::where('bulan', $bulan_presensi)->where('id_guru', $id_guru)->first();
-
-        $sakit = $presensi->sakit;
-        $alpha = $presensi->alpha;
-
-        $potonganAlpha = PotonganGaji::where('nama_potongan', 'Alpha')->first()->jml_potongan;
-        $potonganSakit = PotonganGaji::where('nama_potongan', 'Sakit')->first()->jml_potongan;
-
-        $jmlPotonganAlpha = $potonganAlpha * $alpha;
-        $jmlPotonganSakit = $potonganSakit * $sakit;
-
-        $totalPotongan = $jmlPotonganAlpha + $jmlPotonganSakit;
-        $totalGaji = $jumlahGaji - $totalPotongan;
-
-        $simpan = Gaji::create([
-            'bulan' => $request->bulan,
-            'id_guru' => $request->id_guru,
-            'potongan' => $totalPotongan,
-            'total_gaji' => $totalGaji
+        $simpan_tunjangan = Tunjangan::create([
+            'bulan' => $bulan,
+            'id_guru' => $id_guru,
+            'jml_tunjangan' => $jml_tunjangan,
         ]);
-        if ($simpan) {
+
+        $simpan_gaji = Gaji::create([
+            'bulan' => $bulan,
+            'id_guru' => $id_guru,
+            'potongan' => $potongan,
+            'total_gaji' => $total_gaji,
+        ]);
+
+        if ($simpan_tunjangan && $simpan_gaji) {
             session()->flash('berhasil', 'Gaji Guru berhasil dicetak!');
             return redirect()->route('gaji.index');
         } else {
             return redirect()->back();
         }
     }
+
+    // public function store(Request $request)
+    // {
+    //     $id_guru = $request->id_guru;
+    //     $gaji = Guru::where('id_guru', $id_guru)->first()->jabatan;
+
+    //     $gaji_pokok = $gaji->gaji_pokok;
+    //     $tj_transport = $gaji->tj_transport;
+    //     $uang_makan = $gaji->uang_makan;
+
+    //     $jumlahGaji = $gaji_pokok + $tj_transport + $uang_makan;
+
+    //     $bulan_presensi = $request->bulan;
+    //     $presensi = Presensi::where('bulan', $bulan_presensi)->where('id_guru', $id_guru)->first();
+
+    //     $sakit = $presensi->sakit;
+    //     $alpha = $presensi->alpha;
+
+    //     $potonganAlpha = PotonganGaji::where('nama_potongan', 'Alpha')->first()->jml_potongan;
+    //     $potonganSakit = PotonganGaji::where('nama_potongan', 'Sakit')->first()->jml_potongan;
+
+    //     $jmlPotonganAlpha = $potonganAlpha * $alpha;
+    //     $jmlPotonganSakit = $potonganSakit * $sakit;
+
+    //     $totalPotongan = $jmlPotonganAlpha + $jmlPotonganSakit;
+    //     $totalGaji = $jumlahGaji - $totalPotongan;
+
+    //     $simpan = Gaji::create([
+    //         'bulan' => $request->bulan,
+    //         'id_guru' => $request->id_guru,
+    //         'potongan' => $totalPotongan,
+    //         'total_gaji' => $totalGaji
+    //     ]);
+    //     if ($simpan) {
+    //         session()->flash('berhasil', 'Gaji Guru berhasil dicetak!');
+    //         return redirect()->route('gaji.index');
+    //     } else {
+    //         return redirect()->back();
+    //     }
+    // }
 
 
     /**
@@ -149,14 +174,24 @@ class GajiController extends Controller
         $id_guru = $gaji->id_guru;
         $presensi = Presensi::where('bulan', $bulan_presensi)->where('id_guru', $id_guru)->first();
 
+        $gaji_pokok = Guru::where('id_guru', $id_guru)->first()->jabatan->gaji_pokok;
+        $jml_tunjangan = Tunjangan::where('bulan', $bulan_presensi)->where('id_guru', $id_guru)->first()->jml_tunjangan;
+
+        $total_bruto = $gaji_pokok + $jml_tunjangan;
+
         $sakit = $presensi->sakit ?? 0;
-        $alpha = $presensi->alpha ?? 0;
+        $tidak_hadir = $presensi->tidak_hadir ?? 0;
 
-        $potonganAlpha = PotonganGaji::where('nama_potongan', 'Alpha')->first()->jml_potongan;
-        $potonganSakit = PotonganGaji::where('nama_potongan', 'Sakit')->first()->jml_potongan;
+        $potongan_sakit = PotonganGaji::where('nama_potongan', 'Sakit')->first()->jml_potongan;
+        $potongan_tidak_hadir = PotonganGaji::where('nama_potongan', 'Tidak Hadir')->first()->jml_potongan;
+        $potongan_bpr = PotonganGaji::where('nama_potongan', 'BPR')->first()->jml_potongan;
+        $potongan_lazisnu = PotonganGaji::where('nama_potongan', 'Lazisnu')->first()->jml_potongan;
 
-        $jmlPotonganAlpha = $potonganAlpha * $alpha;
-        $jmlPotonganSakit = $potonganSakit * $sakit;
+        $total_potongan_tidak_hadir = $potongan_tidak_hadir * $tidak_hadir;
+        $total_potongan_sakit = $potongan_sakit * $sakit;
+
+        $potongan_sakit_dan_tidak_hadir = $total_potongan_tidak_hadir + $total_potongan_sakit;
+
 
         if (Auth::user()->hak_akses == 'guru') {
             Gaji::where('id_gaji', $id)->update(['status' => 'diterima']);
@@ -166,10 +201,17 @@ class GajiController extends Controller
 
         $pdf = Pdf::loadView('gaji.slip', [
             'gaji' => $gaji,
-            'alpha' => $alpha,
+            'tidak_hadir' => $tidak_hadir,
             'sakit' => $sakit,
-            'jmlPotonganAlpha' => $jmlPotonganAlpha,
-            'jmlPotonganSakit' => $jmlPotonganSakit,
+            'potongan_tidak_hadir' => $potongan_tidak_hadir,
+            'potongan_sakit' => $potongan_sakit,
+            'potongan_bpr' => $potongan_bpr,
+            'potongan_lazisnu' => $potongan_lazisnu,
+            'tidak_hadir' => $tidak_hadir,
+            'sakit' => $sakit,
+            'jml_tunjangan' => $jml_tunjangan,
+            'total_bruto' => $total_bruto,
+            'potongan_sakit_dan_tidak_hadir' => $potongan_sakit_dan_tidak_hadir,
         ])->setPaper('A4', 'portrait');
 
         return $pdf->stream('Slip-Gaji.pdf');
@@ -233,5 +275,50 @@ class GajiController extends Controller
         ])->setPaper('A4', 'portrait');
 
         return $pdf->stream($fileName);
+    }
+
+    public function detailGaji(Request $request)
+    {
+        $id_guru = $request->id_guru;
+        $bulan = $request->bulan;
+        $nama_guru = Guru::where('id_guru', $id_guru)->first()->user->name;
+        $gaji_pokok = Guru::where('id_guru', $id_guru)->first()->jabatan->gaji_pokok;
+        $jml_tunjangan = $request->jml_tunjangan;
+        $total_bruto = $gaji_pokok + $jml_tunjangan;
+        $presensi = Presensi::where('bulan', $bulan)->where('id_guru', $id_guru)->first();
+
+        $sakit = $presensi->sakit ?? 0;
+        $tidak_hadir = $presensi->tidak_hadir ?? 0;
+
+        $potongan_sakit = PotonganGaji::where('nama_potongan', 'Sakit')->first()->jml_potongan;
+        $potongan_tidak_hadir = PotonganGaji::where('nama_potongan', 'Tidak Hadir')->first()->jml_potongan;
+        $potongan_bpr = PotonganGaji::where('nama_potongan', 'BPR')->first()->jml_potongan;
+        $potongan_lazisnu = PotonganGaji::where('nama_potongan', 'Lazisnu')->first()->jml_potongan;
+
+        $total_potongan_tidak_hadir = $potongan_tidak_hadir * $tidak_hadir;
+        $total_potongan_sakit = $potongan_sakit * $sakit;
+
+        $total_potongan = $total_potongan_tidak_hadir + $total_potongan_sakit + $potongan_bpr + $potongan_lazisnu;
+
+        $total_gaji = $total_bruto - $total_potongan;
+        // $
+
+        // dd($nama_guru, $gaji_pokok, $jml_tunjangan);
+        return view('gaji.detail', compact(
+            'id_guru',
+            'bulan',
+            'nama_guru',
+            'gaji_pokok',
+            'jml_tunjangan',
+            'total_bruto',
+            'tidak_hadir',
+            'sakit',
+            'potongan_sakit',
+            'potongan_tidak_hadir',
+            'potongan_bpr',
+            'potongan_lazisnu',
+            'total_potongan',
+            'total_gaji',
+        ));
     }
 }

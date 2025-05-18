@@ -32,16 +32,6 @@ $(document).ready(function () {
                 className: "align-middle",
             },
             {
-                data: "tj_transport",
-                name: "tj_transport",
-                className: "align-middle",
-            },
-            {
-                data: "uang_makan",
-                name: "uang_makan",
-                className: "align-middle",
-            },
-            {
                 data: "potongan",
                 name: "potongan",
                 className: "align-middle",
@@ -126,34 +116,35 @@ function kirimGaji(id) {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    "X-CSRF-TOKEN": document
+                        .querySelector('meta[name="csrf-token"]')
+                        .getAttribute("content"),
                 },
-                body: JSON.stringify({ id: id })
+                body: JSON.stringify({ id: id }),
             })
-            .then(response => response.json())
-            .then(data => {
-                Swal.fire({
-                    position: "center",
-                    icon: "success",
-                    text: data.message || "Slip gaji berhasil dikirim!",
-                    showConfirmButton: false,
-                    timer: 1500,
+                .then((response) => response.json())
+                .then((data) => {
+                    Swal.fire({
+                        position: "center",
+                        icon: "success",
+                        text: data.message || "Slip gaji berhasil dikirim!",
+                        showConfirmButton: false,
+                        timer: 1500,
+                    });
+                    setTimeout(function () {
+                        location.reload();
+                    }, 1500);
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                    Swal.fire({
+                        icon: "error",
+                        text: "Terjadi kesalahan saat mengirim slip gaji.",
+                    });
                 });
-                setTimeout(function () {
-                    location.reload();
-                }, 1500);
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                Swal.fire({
-                    icon: "error",
-                    text: "Terjadi kesalahan saat mengirim slip gaji.",
-                });
-            });
         }
     });
 }
-
 
 // function kirimGaji(id) {
 //     Swal.fire({

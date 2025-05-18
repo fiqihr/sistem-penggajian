@@ -20,16 +20,6 @@ class JabatanController extends Controller
                 ->editColumn('gaji_pokok', function ($row) {
                     return formatRupiah($row->gaji_pokok);
                 })
-                ->editColumn('tj_transport', function ($row) {
-                    return formatRupiah($row->tj_transport);
-                })
-                ->editColumn('uang_makan', function ($row) {
-                    return formatRupiah($row->uang_makan);
-                })
-                ->editColumn('total', function ($row) {
-                    $total = $row->gaji_pokok + $row->tj_transport + $row->uang_makan;
-                    return formatRupiah($total);
-                })
                 ->addColumn('action', function ($row) {
                     $showBtn = '<a href="' . route('jabatan.show', $row->id_jabatan) . '" class="btn btn-primary btn-user text-white"><i class="fa-solid fa-eye"></i><span class="ml-2 ">Detail</span></a>';
                     $editBtn = '<a href="' . route('jabatan.edit', $row->id_jabatan) . '" class="ml-2 btn btn-warning text-white"><i class="fa-solid fa-pen-nib"></i><span class="ml-2 ">Edit</span></a>';

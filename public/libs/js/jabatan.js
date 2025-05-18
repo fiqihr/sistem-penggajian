@@ -22,23 +22,6 @@ $(document).ready(function () {
                 className: "align-middle",
             },
             {
-                data: "tj_transport",
-                name: "tj_transport",
-                className: "align-middle",
-            },
-            {
-                data: "uang_makan",
-                name: "uang_makan",
-                className: "align-middle",
-            },
-            {
-                data: "total",
-                name: "total",
-                className: "align-middle font-weight-bold",
-                orderable: false,
-                searchable: false,
-            },
-            {
                 data: "action",
                 name: "action",
                 orderable: false,

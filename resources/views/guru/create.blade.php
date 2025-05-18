@@ -35,12 +35,11 @@
                 </div>
                 <div class="form-group col-md-6 pl-md-2">
                     <label for="status">Status Guru</label>
-                    <input id="status" type="text" name="status" id="status"
-                        class="form-control @error('status') is-invalid @enderror" value="{{ old('status') }}" required
-                        placeholder="Masukkan status guru...">
-                    @error('status')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
+                    <select class="form-control" name="status" id="status">
+                        <option selected disabled value="">-- Status Guru --</option>
+                        <option value="Guru Tetap">Guru Tetap</option>
+                        <option value="Guru Tidak Tetap">Guru Tidak Tetap</option>
+                    </select>
                 </div>
             </div>
             <div class="form-row mb-2">

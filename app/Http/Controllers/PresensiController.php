@@ -186,4 +186,31 @@ class PresensiController extends Controller
 
         return $pdf->stream($fileName);
     }
+
+    public function getPresensiJson(Request $request)
+    {
+        $id_guru = $request->id_guru;
+        $bulan = $request->bulan;
+
+        $presensi = Presensi::where('id_guru', $id_guru)
+            ->where('bulan', $bulan)
+            ->first();
+        
+            
+
+        if ($presensi) {
+            return response()->json([
+                'status' => 'success',
+                'data' => [
+                    'hadir' => $presensi->hadir,
+                    'sakit' => $presensi->sakit,
+                    'alpha' => $presensi->alpha,
+                ]
+            ]);
+        } else {
+            return response()->json([
+                'status' => 'not_found'
+            ]);
+        }
+    }
 }

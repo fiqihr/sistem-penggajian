@@ -8,6 +8,7 @@ use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\PotonganGajiController;
 use App\Http\Controllers\PresensiController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TunjanganController;
 use App\Models\Gaji;
 use App\Models\Guru;
 use Illuminate\Support\Facades\Auth;
@@ -40,6 +41,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('/presensi', PresensiController::class);
     Route::resource('/gaji', GajiController::class);
     Route::resource('/gaji-saya', GajiSayaController::class);
+    Route::resource('/tunjangan', TunjanganController::class);
+    Route::get('/gaji/create/detail-gaji', [GajiController::class, 'detailGaji'])->name('gaji.detail');
+    Route::get('/get-presensi', [PresensiController::class, 'getPresensiJson'])->name('presensi.get.json');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile/update-password', [ProfileController::class, 'updatePassword'])->name('profile.updatePassword');
     Route::put('/profile/{id}', [ProfileController::class, 'update'])->name('profile.update');

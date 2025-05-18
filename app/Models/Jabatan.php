@@ -13,7 +13,7 @@ class Jabatan extends Model
     protected $fillable = [
         'nama_jabatan',
         'gaji_pokok',
-        'tj_transport',
-        'uang_makan',
+        // 'tj_transport',
+        // 'uang_makan',
     ];
 }

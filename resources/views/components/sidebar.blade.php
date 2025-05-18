@@ -51,6 +51,11 @@
                 <span>Gaji</span></a>
         </li>
         <li class="nav-item">
+            <a class="nav-link" href="#">
+                <i class="fa-solid fa-comment-dollar"></i>
+                <span>Tunjangan</span></a>
+        </li>
+        <li class="nav-item">
             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
                 aria-expanded="true" aria-controls="collapseTwo">
                 <i class="fas fa-fw fa-cog"></i>

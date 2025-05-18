@@ -16,8 +16,6 @@
                     <th>Nama Guru</th>
                     <th>Jabatan</th>
                     <th>Gaji Pokok</th>
-                    <th>Tj Transportasi</th>
-                    <th>Uang Makan</th>
                     <th>Potongan</th>
                     <th>Total Gaji</th>
                     <th class="text-center">Aksi</th>

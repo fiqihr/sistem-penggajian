@@ -159,28 +159,37 @@
             <td class="value">{{ formatRupiah($gaji->guru->jabatan->gaji_pokok) }}</td>
         </tr>
         <tr>
-            <td class="label">- Tunjangan Transportasi</td>
-            <td class="value">{{ formatRupiah($gaji->guru->jabatan->tj_transport) }}</td>
+            <td class="label">- Tunjangan</td>
+            <td class="value">{{ formatRupiah($jml_tunjangan) }}</td>
         </tr>
         <tr>
-            <td class="label">- Tunjangan Makan</td>
-            <td class="value">{{ formatRupiah($gaji->guru->jabatan->uang_makan) }}</td>
+            <td class="label"><strong>Total Penghasilan Bruto</strong></td>
+            <td class="value"><strong>{{ formatRupiah($total_bruto) }}</strong></td>
         </tr>
-        <tr class="bold">
-            <td class="label">Total Penghasilan Bruto</td>
-            <td class="value">{{ formatRupiah($gaji->total_gaji + $gaji->potongan) }}</td>
-        </tr>
-
     </table>
     <div class="line"></div>
     <div class="section-title">POTONGAN</div>
     <table class="salary-table">
         <tr>
-            <td>Potongan Ketidakhadiran<br> (Alpha: {{ $alpha }} x
-                {{ formatRupiah($jmlPotonganAlpha / max($alpha, 1)) }},
+            <td>
+                - Ketidakhadiran (Tidak Hadir: {{ $tidak_hadir }} x
+                {{ formatRupiah($potongan_tidak_hadir) }},
                 Sakit:
-                {{ $sakit }} x {{ formatRupiah($jmlPotonganSakit / max($sakit, 1)) }})</td>
-            <td class="value">{{ formatRupiah($gaji->potongan) }}</td>
+                {{ $sakit }} x {{ formatRupiah($potongan_sakit) }})
+            </td>
+            <td class="value">{{ formatRupiah($potongan_sakit_dan_tidak_hadir) }}</td>
+        </tr>
+        <tr>
+            <td>
+                - BPR
+            </td>
+            <td class="value">{{ formatRupiah($potongan_bpr) }}</td>
+        </tr>
+        <tr>
+            <td>
+                - Lazisnu <br>
+            </td>
+            <td class="value">{{ formatRupiah($potongan_lazisnu) }}</td>
         </tr>
 
         <tr class="bold">

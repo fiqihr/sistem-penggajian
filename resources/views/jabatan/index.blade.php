@@ -14,9 +14,6 @@
                     <th class="text-center">No</th>
                     <th>Nama Jabatan</th>
                     <th>Gaji Pokok</th>
-                    <th>Tunjangan Transport</th>
-                    <th>Uang Makan</th>
-                    <th>Total</th>
                     <th class="text-center">Aksi</th>
                 </tr>
             </thead>
