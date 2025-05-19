@@ -51,7 +51,7 @@
                 <span>Gaji</span></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="{{ route('tunjangan.index') }}">
                 <i class="fa-solid fa-comment-dollar"></i>
                 <span>Tunjangan</span></a>
         </li>

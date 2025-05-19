@@ -40,6 +40,9 @@
     ```
     php artisan migrate
     ```
+    ```
+    php artisan db:seed
+    ```
 
 5. Jalankan proyek
 

@@ -193,11 +193,17 @@
         </tr>
 
         <tr class="bold">
-            <td class="label">Penerima Bersih</td>
-            <td class="value">{{ formatRupiah($gaji->total_gaji) }}</td>
+            <td class="label">Total Potongan</td>
+            <td class="value">{{ formatRupiah($total_potongan) }}</td>
         </tr>
     </table>
     <div class="line"></div>
+    <table class="salary-table">
+        <tr class="bold">
+            <td class="label">PENERIMA BERSIH</td>
+            <td class="value">{{ formatRupiah($gaji->total_gaji) }}</td>
+        </tr>
+    </table>
     <div class="terbilang">
         <strong>Terbilang:</strong><span style="font-style: italic"> {{ ucwords(terbilang($gaji->total_gaji)) }}
             Rupiah</span>

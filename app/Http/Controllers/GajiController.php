@@ -179,6 +179,7 @@ class GajiController extends Controller
 
         $total_bruto = $gaji_pokok + $jml_tunjangan;
 
+
         $sakit = $presensi->sakit ?? 0;
         $tidak_hadir = $presensi->tidak_hadir ?? 0;
 
@@ -191,6 +192,7 @@ class GajiController extends Controller
         $total_potongan_sakit = $potongan_sakit * $sakit;
 
         $potongan_sakit_dan_tidak_hadir = $total_potongan_tidak_hadir + $total_potongan_sakit;
+        $total_potongan = $potongan_sakit_dan_tidak_hadir + $potongan_bpr + $potongan_lazisnu;
 
 
         if (Auth::user()->hak_akses == 'guru') {
@@ -212,6 +214,7 @@ class GajiController extends Controller
             'jml_tunjangan' => $jml_tunjangan,
             'total_bruto' => $total_bruto,
             'potongan_sakit_dan_tidak_hadir' => $potongan_sakit_dan_tidak_hadir,
+            'total_potongan' => $total_potongan
         ])->setPaper('A4', 'portrait');
 
         return $pdf->stream('Slip-Gaji.pdf');
