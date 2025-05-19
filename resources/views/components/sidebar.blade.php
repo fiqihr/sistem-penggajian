@@ -26,14 +26,14 @@
     @elseif (Auth::user()->hak_akses == 'admin')
         <!-- Nav Item - Tables -->
         <li class="nav-item">
-            <a class="nav-link" href="{{ route('guru.index') }}">
-                <i class="fa-solid fa-user-tie"></i>
-                <span>Guru</span></a>
-        </li>
-        <li class="nav-item">
             <a class="nav-link" href="{{ route('jabatan.index') }}">
                 <i class="fa-solid fa-briefcase"></i>
                 <span>Jabatan</span></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('guru.index') }}">
+                <i class="fa-solid fa-user-tie"></i>
+                <span>Guru</span></a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="{{ route('presensi.index') }}">
@@ -46,19 +46,19 @@
                 <span>Potongan Gaji</span></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="{{ route('gaji.index') }}">
-                <i class="fa-solid fa-coins"></i>
-                <span>Gaji</span></a>
-        </li>
-        <li class="nav-item">
             <a class="nav-link" href="{{ route('tunjangan.index') }}">
                 <i class="fa-solid fa-comment-dollar"></i>
                 <span>Tunjangan</span></a>
         </li>
         <li class="nav-item">
+            <a class="nav-link" href="{{ route('gaji.index') }}">
+                <i class="fa-solid fa-coins"></i>
+                <span>Gaji</span></a>
+        </li>
+        <li class="nav-item">
             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
                 aria-expanded="true" aria-controls="collapseTwo">
-                <i class="fas fa-fw fa-cog"></i>
+                <i class="fa-solid fa-copy"></i>
                 <span>Laporan</span>
             </a>
             <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">

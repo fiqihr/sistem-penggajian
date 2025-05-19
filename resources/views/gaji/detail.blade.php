@@ -5,11 +5,11 @@
     </div>
     <div class="container-fluid  bg-white rounded-lg p-4 shadow-sm">
         <form action="{{ route('gaji.store') }}" method="POST">
-            <input type="text" name="id_guru" value="{{ $id_guru }}">
-            <input type="text" name="bulan" value="{{ $bulan }}">
-            <input type="text" name="jml_tunjangan" value="{{ $jml_tunjangan }}">
-            <input type="text" name="total_potongan" value="{{ $total_potongan }}">
-            <input type="text" name="total_gaji" value="{{ $total_gaji }}">
+            <input type="hidden" name="id_guru" value="{{ $id_guru }}">
+            <input type="hidden" name="bulan" value="{{ $bulan }}">
+            <input type="hidden" name="potongan" value="{{ $total_potongan }}">
+            <input type="hidden" name="total_gaji" value="{{ $total_gaji }}">
+            <input type="hidden" name="id_tunjangan" value="{{ $id_tunjangan }}">
             @csrf
             <table class="table">
                 <tbody>
@@ -78,4 +78,5 @@
             </div>
         </form>
     </div>
+    
 </x-layout>

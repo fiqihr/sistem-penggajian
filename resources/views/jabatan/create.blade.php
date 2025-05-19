@@ -29,36 +29,6 @@
                     @enderror
                 </div>
             </div>
-            <div class="mb-4 d-flex">
-                <div class="flex-fill mr-2">
-                    <label for="tj_transport" class="form-label">Tunjangan Transport</label>
-                    <div class="input-group mb-2">
-                        <div class="input-group-prepend">
-                            <div class="input-group-text">Rp.</div>
-                        </div>
-                        <input id="tj_transport" type="number" name="tj_transport" id="tj_transport"
-                            class="form-control @error('tj_transport') is-invalid @enderror"
-                            value="{{ old('tj_transport') }}" required placeholder="Masukkan tunjangan transport...">
-                        @error('tj_transport')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
-                <div class="flex-fill">
-                    <label for="uang_makan" class="form-label">Uang Makan</label>
-                    <div class="input-group mb-2">
-                        <div class="input-group-prepend">
-                            <div class="input-group-text">Rp.</div>
-                        </div>
-                        <input id="uang_makan" type="number" name="uang_makan" id="uang_makan"
-                            class="form-control @error('uang_makan') is-invalid @enderror"
-                            value="{{ old('uang_makan') }}" required placeholder="Masukkan uang makan...">
-                        @error('uang_makan')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
-            </div>
             <hr class="mb-4 mt-4">
             <div class="d-flex justify-content-end">
                 <button type="submit" class=" btn btn-primary"><i class="fa-solid fa-floppy-disk"></i>

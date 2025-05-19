@@ -44,7 +44,7 @@
                     <th>Nama Guru</th>
                     <th>Hadir</th>
                     <th>Sakit</th>
-                    <th>Alpha</th>
+                    <th>Tidak Hadir</th>
                     <th class="text-center">Aksi</th>
                 </tr>
             </thead>

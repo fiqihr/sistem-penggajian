@@ -15,13 +15,10 @@ class TunjanganController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            return DataTables::of(Tunjangan::query()->orderBy('id_tunjangan', 'desc'))
+            return DataTables::of(Tunjangan::query()->orderBy('id_tunjangan', 'asc'))
                 ->addIndexColumn()
                 ->editColumn('bulan', function ($row) {
                     return formatBulan($row->bulan);
-                })
-                ->editColumn('id_guru', function ($row) {
-                    return $row->guru->user->name;
                 })
                 ->editColumn('jml_tunjangan', function ($row) {
                     return formatRupiah($row->jml_tunjangan);
@@ -31,22 +28,21 @@ class TunjanganController extends Controller
                     $bulan = $row->bulan;
                     $cek_gaji = Gaji::where('id_guru', $id_guru)->where('bulan', $bulan)->first();
                     $cek_status_gaji = $cek_gaji ? $cek_gaji->status : '-';
-                    if ($cek_status_gaji == 'belum') {
-                        $editBtn = '<a href="' . route('tunjangan.edit', $row->id_tunjangan) . '" class="ml-2 btn btn-warning text-white"><i class="fa-solid fa-pen-nib"></i><span class="ml-2 ">Edit</span></a>';
-                    } else {
-                        $editBtn = '<btn onclick="peringatanBtnTunjangan()" class="ml-2 btn btn-secondary text-white" disabled><i class="fa-solid fa-pen-nib"></i><span class="ml-2 ">Edit</span></btn>';
-                    }
+                    // if ($cek_status_gaji == 'belum') {
+                    // } else {
+                    //     $editBtn = '<btn onclick="peringatanBtnTunjangan()" class="ml-2 btn btn-secondary text-white" disabled><i class="fa-solid fa-pen-nib"></i><span class="ml-2 ">Edit</span></btn>';
+                    // }
+                    $editBtn = '<a href="' . route('tunjangan.edit', $row->id_tunjangan) . '" class="ml-2 btn btn-warning text-white"><i class="fa-solid fa-pen-nib"></i><span class="ml-2 ">Edit</span></a>';
                     // $showBtn = '<a href="' . route('jabatan.show', $row->id_jabatan) . '" class="btn btn-primary btn-user text-white"><i class="fa-solid fa-eye"></i><span class="ml-2 ">Detail</span></a>';
-                    // $deleteBtn = '<form id="delete-form-' . $row->id_jabatan . '" action="' . route('jabatan.destroy', $row->id_jabatan) . '" method="POST" style="display:inline;">
-                    //     ' . csrf_field() . '
-                    //     ' . method_field('DELETE') . '
-                    //     <button type="button" onclick="deleteJabatan(' . $row->id_jabatan . ')" class="btn btn-danger">
-                    //         <i class="fa-solid fa-trash"></i><span class="ml-2 ">Hapus</span>
-                    //     </button>
-                    // </form>';
+                    $deleteBtn = '<form id="delete-form-' . $row->id_tunjangan . '" action="' . route('tunjangan.destroy', $row->id_tunjangan) . '" method="POST" style="display:inline;">
+                        ' . csrf_field() . '
+                        ' . method_field('DELETE') . '
+                        <button type="button" onclick="deleteTunjangan(' . $row->id_tunjangan . ')" class="btn btn-danger">
+                            <i class="fa-solid fa-trash"></i><span class="ml-2 ">Hapus</span>
+                        </button>
+                    </form>';
 
-
-                    return '<div class="text-center">' . $editBtn .  '</div>';
+                    return '<div class="text-center">' . $editBtn . $deleteBtn . '</div>';
                 })
                 ->rawColumns(['action'])
                 ->make(true);
@@ -59,7 +55,7 @@ class TunjanganController extends Controller
      */
     public function create()
     {
-        //
+        return view('tunjangan.create');
     }
 
     /**
@@ -67,7 +63,22 @@ class TunjanganController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'jml_tunjangan' => 'required',
+            'nama_tunjangan' => 'required',
+        ]);
+
+        $simpan = Tunjangan::create([
+            'jml_tunjangan' => $request->jml_tunjangan,
+            'nama_tunjangan' => $request->nama_tunjangan,
+        ]);
+
+        if ($simpan) {
+            session()->flash('berhasil', 'Tunjangan berhasil disimpan!');
+            return redirect()->route('tunjangan.index');
+        } else {
+            return redirect()->back();
+        }
     }
 
     /**
@@ -92,28 +103,16 @@ class TunjanganController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $jml_tunjangan_lama = $request->jml_tunjangan_lama;
         $jml_tunjangan = $request->jml_tunjangan;
-        $data = Tunjangan::find($id);
-        $id_guru = $data->id_guru;
-        $bulan = $data->bulan;
+        $nama_tunjangan = $request->nama_tunjangan;
 
-        $gaji = Gaji::where('id_guru', $id_guru)->where('bulan', $bulan)->first();
-        $total_gaji = $gaji->total_gaji;
-
-        $total_gaji_baru = ($total_gaji - $jml_tunjangan_lama) + $jml_tunjangan;
-
-        $update_gaji = $gaji->update([
-            'total_gaji' => $total_gaji_baru,
-        ]);
-
-        $update_tunjangan = $data->update([
+        $update = Tunjangan::where('id_tunjangan', $id)->update([
             'jml_tunjangan' => $jml_tunjangan,
+            'nama_tunjangan' => $nama_tunjangan,
         ]);
 
-        $update = $update_gaji && $update_tunjangan;
         if ($update) {
-            session()->flash('berhasil', 'Jumlah tunjangan berhasil diupdate!');
+            session()->flash('berhasil', 'Tunjangan berhasil diupdate!');
             return redirect()->route('tunjangan.index');
         } else {
             return redirect()->back();
@@ -125,6 +124,12 @@ class TunjanganController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $hapus = Tunjangan::where('id_tunjangan', $id)->delete();
+        if ($hapus) {
+            session()->flash('berhasil', 'Tunjangan berhasil dihapus!');
+            return redirect()->route('tunjangan.index');
+        } else {
+            return redirect()->back();
+        }
     }
 }

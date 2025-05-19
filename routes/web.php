@@ -25,6 +25,8 @@ Route::get('/coba', function () {
 Route::get('/', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::post('/guru/{id}/upload-photo', [GuruController::class, 'uploadPhoto'])->name('guru.uploadPhoto');
+Route::get('/cek-presensi', [PresensiController::class, 'cekPresensi'])->name('presensi.cek');
+
 
 Route::middleware('auth')->group(function () {
     // Route::get('/', function () {

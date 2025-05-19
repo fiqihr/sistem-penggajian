@@ -8,9 +8,21 @@
             <!-- Gambar -->
             <div class="col-4 d-flex flex-column align-items-center justify-content-center ">
                 <div class="d-flex flex-column align-items-center justify-content-center">
-                    <img src="{{ asset('storage/images/' . $guru->photo) }}" alt="Profile"
+
+                    @if ($guru->photo == 'default.svg')
+                        <img src="{{ asset('libs/img/default.svg') }}" alt="Profile" class="rounded-lg shadow mx-auto"
+                            style="width: auto; height: auto%; max-width: 300px; object-fit: cover;">
+                    @else
+                        <img src="{{ asset('storage/images/' . $guru->photo) }}" alt="Profile"
+                            class="rounded-lg shadow mx-auto"
+                            style="width: auto; height: auto%; max-width: 300px; object-fit: cover;">
+                    @endif
+
+                    {{-- <img src="{{ asset('storage/images/' . $guru->photo) }}" alt="Profile"
                         class="rounded-lg shadow mx-auto"
-                        style="width: auto; height: auto%; max-width: 300px; object-fit: cover;">
+                        style="width: auto; height: auto%; max-width: 300px; object-fit: cover;"> --}}
+
+
                     <div class="text-center mx-auto mt-2">
                         <btn class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal">
                             <i class="fa-solid fa-camera-rotate"></i> <span>Update Foto</span>

@@ -119,7 +119,7 @@ class PresensiController extends Controller
             'id_guru' => 'required',
             'hadir' => 'required|numeric',
             'sakit' => 'required|numeric',
-            'alpha' => 'required|numeric',
+            'tidak_hadir' => 'required|numeric',
         ]);
 
         $simpan = Presensi::create([
@@ -127,7 +127,7 @@ class PresensiController extends Controller
             'id_guru' => $request->id_guru,
             'hadir' => $request->hadir,
             'sakit' => $request->sakit,
-            'alpha' => $request->alpha
+            'tidak_hadir' => $request->tidak_hadir
         ]);
 
         if ($simpan) {
@@ -151,7 +151,9 @@ class PresensiController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $data = Presensi::find($id);
+        $guru = Guru::with('user')->get();
+        return view('presensi.edit', compact('data', 'guru'));
     }
 
     /**
@@ -159,7 +161,28 @@ class PresensiController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'bulan' => 'required',
+            'id_guru' => 'required',
+            'hadir' => 'required|numeric',
+            'sakit' => 'required|numeric',
+            'tidak_hadir' => 'required|numeric',
+        ]);
+
+        $update = Presensi::find($id)->update([
+            'bulan' => $request->bulan,
+            'id_guru' => $request->id_guru,
+            'hadir' => $request->hadir,
+            'sakit' => $request->sakit,
+            'tidak_hadir' => $request->tidak_hadir
+        ]);
+
+        if ($update) {
+            session()->flash('berhasil', 'Presensi berhasil diupdate!');
+            return redirect()->route('presensi.index');
+        } else {
+            return redirect()->back();
+        }
     }
 
     /**
@@ -195,8 +218,8 @@ class PresensiController extends Controller
         $presensi = Presensi::where('id_guru', $id_guru)
             ->where('bulan', $bulan)
             ->first();
-        
-            
+
+
 
         if ($presensi) {
             return response()->json([
@@ -212,5 +235,18 @@ class PresensiController extends Controller
                 'status' => 'not_found'
             ]);
         }
+    }
+
+    public function cekPresensi(Request $request)
+    {
+        $id_guru = $request->id_guru;
+
+        $bulans = Presensi::where('id_guru', $id_guru)
+            ->pluck('bulan'); // format: 2025-05
+
+        return response()->json([
+            'status' => 'success',
+            'bulans' => $bulans
+        ]);
     }
 }

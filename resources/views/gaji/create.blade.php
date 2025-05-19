@@ -14,14 +14,21 @@
                     @endforeach
                 </select>
             </div>
-            <div class="mb-4">
+            <div class="mb-3">
                 <label for="bulan" class="form-label">Bulan</label>
-                <input id="bulan" type="month" name="bulan" class="form-control" required>
+                <input type="month" id="bulan" name="bulan" class="form-control">
+                <div id="bulan-error" class="text-danger mt-1" style="display: none;"></div>
             </div>
+
             <div class="mb-4">
-                <label for="jml_tunjangan">Tunjangan <span class="small font-italic">(Kosongi jika tidak ada
+                <label for="id_tunjangan">Tunjangan <span class="small font-italic">(Kosongi jika tidak ada
                         tunjangan)</span> </label>
-                <input type="number" name="jml_tunjangan" id="jml_tunjangan" class="form-control">
+                <select class="form-control" name="id_tunjangan" id="id_tunjangan">
+                    <option selected disabled value="">-- Tunjangan --</option>
+                    @foreach ($semua_tunjangan as $tunjangan)
+                        <option value="{{ $tunjangan->id_tunjangan }}">{{ $tunjangan->nama_tunjangan }}</option>
+                    @endforeach
+                </select>
             </div>
             {{-- <div class="mb-4">
                 <label for="id_potongan_gaji">Potongan Gaji</label>
@@ -37,57 +44,68 @@
 
             <hr class="mb-4 mt-4">
             <div class="d-flex justify-content-end">
-                <button type="submit" class=" btn btn-primary"><i class="fa-solid fa-floppy-disk"></i>
+                <button type="submit" id="btn-submit" class=" btn btn-primary"><i class="fa-solid fa-floppy-disk"></i>
                     <span class="ml-1">Simpan</span>
                 </button>
             </div>
         </form>
     </div>
     @push('scripts')
+        @if (session('gagal'))
+            <script>
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    text: "{{ session('gagal') }}",
+                    showConfirmButton: true,
+                    confirmButtonColor: "#3B82F6",
+                });
+            </script>
+        @endif
+        <script src="{{ asset('libs/js/gaji.js') }}"></script>
         <script>
-            // function fetchPresensi() {
-            //     const id_guru = $('#id_guru').val();
-            //     const bulan = $('#bulan').val();
+            let bulanTersedia = [];
 
-            //     if (id_guru && bulan) {
-            //         $.ajax({
-            //             url: '{{ route('presensi.get.json') }}',
-            //             method: 'GET',
-            //             data: {
-            //                 id_guru: id_guru,
-            //                 bulan: bulan
-            //             },
-            //             success: function(response) {
-            //                 let html = '';
-            //                 if (response.status === 'success') {
-            //                     html = `
-    //                 <h5>Data Presensi</h5>
-    //                 <div class="form-group">
-    //                     <label>Hadir</label>
-    //                     <input type="number" class="form-control" value="${response.data.hadir}" disabled>
-    //                 </div>
-    //                 <div class="form-group">
-    //                     <label>Sakit</label>
-    //                     <input type="number" class="form-control" value="${response.data.sakit}" disabled>
-    //                 </div>
-    //                 <div class="form-group">
-    //                     <label>Alpha</label>
-    //                     <input type="number" class="form-control" value="${response.data.alpha}" disabled>
-    //                 </div>
-    //             `;
-            //                 } else {
-            //                     html = `<p class="text-danger"><strong>Data presensi tidak ditemukan.</strong></p>`;
-            //                 }
+            $('#id_guru').on('change', function() {
+                const id_guru = $(this).val();
+                $('#bulan').val('').prop('disabled', true);
+                $('#bulan-error').addClass('hidden');
+                $('#bulan').removeClass('border-red-500');
 
-            //                 $('#presensi-data').html(html);
-            //             }
-            //         });
-            //     } else {
-            //         $('#presensi-data').html('');
-            //     }
-            // }
+                if (id_guru) {
+                    $.ajax({
+                        url: "{{ route('presensi.cek') }}",
+                        method: 'GET',
+                        data: {
+                            id_guru
+                        },
+                        success: function(response) {
+                            if (response.status === 'success') {
+                                bulanTersedia = response.bulans;
+                                $('#bulan').prop('disabled', false);
+                            }
+                        }
+                    });
+                }
+            });
 
-            // $('#id_guru, #bulan').on('change', fetchPresensi);
+            $('#bulan').on('change', function() {
+                const selected = $(this).val(); // format: 2025-05
+
+                if (!bulanTersedia.includes(selected)) {
+                    // Tampilkan pesan error & beri warna merah
+                    $('#bulan-error').text('Presensi Guru belum diisi pada bulan tersebut.').show();
+                    $('#bulan').addClass('is-invalid'); // Bootstrap: border merah
+                    $('#btn-submit').prop('disabled', true);
+                } else {
+                    // Sembunyikan pesan error & hapus warna merah
+                    $('#bulan-error').hide().text('');
+                    $('#bulan').removeClass('is-invalid');
+                    $('#btn-submit').prop('disabled', false);
+                }
+            });
         </script>
     @endpush
+
+
 </x-layout>

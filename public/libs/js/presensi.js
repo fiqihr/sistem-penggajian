@@ -38,8 +38,8 @@ $(document).ready(function () {
                 className: "align-middle",
             },
             {
-                data: "alpha",
-                name: "alpha",
+                data: "tidak_hadir",
+                name: "tidak_hadir",
                 className: "align-middle",
             },
             {
@@ -74,12 +74,12 @@ $(document).ready(function () {
         table.ajax.reload();
     });
 
-    // if (presensiMessage) {
-    //     jabatanBerhasil(presensiMessage);
-    // }
+    if (presensiMessage) {
+        presensiBerhasil(presensiMessage);
+    }
 });
 
-function jabatanBerhasil(message) {
+function presensiBerhasil(message) {
     Swal.fire({
         position: "center",
         icon: "success",
@@ -89,7 +89,7 @@ function jabatanBerhasil(message) {
     });
 }
 
-function deleteJabatan(id) {
+function deletePresensi(id) {
     Swal.fire({
         text: "Apakah kamu yakin?",
         icon: "warning",

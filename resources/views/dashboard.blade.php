@@ -38,7 +38,7 @@
                             <div class="row no-gutters align-items-center">
                                 <div class="col mr-2">
                                     <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                        Jabatan</div>
+                                        Jabatan Guru</div>
                                     <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $jumlahJabatan }}</div>
                                 </div>
                                 <div class="col-auto">
@@ -167,8 +167,17 @@
             @endforeach
             <div class="row bg-white py-5 rounded-lg overflow-hidden" style="height: 400px;">
                 <div class="col-lg-4 rounded-lg d-flex justify-content-center align-items-center" style="height: 100%;">
-                    <img src="{{ asset('storage/images/' . $user->guru->photo) }}" alt="Profile"
-                        class="img-fluid shadow" style="max-height: 100%; object-fit: contain;">
+
+                    {{-- <img src="{{ asset('storage/images/' . $user->guru->photo) }}" alt="Profile"
+                        class="img-fluid shadow" style="max-height: 100%; object-fit: contain;"> --}}
+
+                    @if ($user->guru->photo == 'default.svg')
+                        <img src="{{ asset('libs/img/default.svg') }}" alt="Profile" class="img-fluid shadow"
+                            style="max-height: 100%; object-fit: contain;">
+                    @else
+                        <img src="{{ asset('storage/images/' . $user->guru->photo) }}" alt="Profile"
+                            class="img-fluid shadow" style="max-height: 100%; object-fit: contain;">
+                    @endif
                 </div>
                 <div class="col-lg-8  d-flex align-items-center" style="height: 100%;">
                     <div>

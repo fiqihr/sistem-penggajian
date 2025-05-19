@@ -39,7 +39,7 @@ $(document).ready(function () {
             {
                 data: "total_gaji",
                 name: "total_gaji",
-                className: "align-middle",
+                className: "align-middle font-weight-bold",
             },
             {
                 data: "action",
@@ -83,6 +83,8 @@ function gajiBerhasil(message) {
         timer: 1500,
     });
 }
+
+
 
 function deleteGaji(id) {
     Swal.fire({

@@ -20,7 +20,7 @@ class GajiSayaController extends Controller
         $id_user = Auth::user()->id;
         $id_guru = Guru::where('id_user', $id_user)->value('id_guru');
         if ($request->ajax()) {
-            return DataTables::of(Gaji::query()->where('id_guru', $id_guru)->orderBy('id_gaji', 'desc'))
+            return DataTables::of(Gaji::query()->where('id_guru', $id_guru)->whereNot('status', 'belum')->orderBy('id_gaji', 'desc'))
                 ->addIndexColumn()
                 ->editColumn('bulan', function ($row) {
                     return formatBulan($row->bulan);
@@ -60,9 +60,9 @@ class GajiSayaController extends Controller
                     if ($row->status == 'belum') {
                         $cetakBtn = '<a disabled class="ml-2 btn btn-secondary text-white"><i class="fa-solid fa-print"></i><span class="ml-2">Cetak</span></a>';
                     } else if ($row->status == 'dikirim') {
-                        $cetakBtn = '<a href="' . route('gaji.show', $row->id_gaji) . '" class="ml-2 btn btn-warning text-white"><i class="fa-solid fa-print"></i><span class="ml-2">Cetak</span></a>';
+                        $cetakBtn = '<a href="' . route('gaji.show', $row->id_gaji) . '" onclick="window.open(this.href, \'_blank\'); location.reload(); return false;"  class="ml-2 btn btn-warning text-white"><i class="fa-solid fa-print"></i><span class="ml-2">Cetak</span></a>';
                     } else {
-                        $cetakBtn = '<a href="' . route('gaji.show', $row->id_gaji) . '" class="ml-2 btn btn-success text-white"><i class="fa-solid fa-file-circle-check"></i><span class="ml-2">Dilihat</span></a>';
+                        $cetakBtn = '<a target="_blank" href="' . route('gaji.show', $row->id_gaji) . '" class="ml-2 btn btn-success text-white"><i class="fa-solid fa-file-circle-check"></i><span class="ml-2">Dilihat</span></a>';
                     }
 
 

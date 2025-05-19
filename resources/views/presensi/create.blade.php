@@ -6,7 +6,6 @@
     <div class="container-fluid  bg-white rounded-lg p-4 shadow-sm">
         <form action="{{ route('presensi.store') }}" method="POST" class="col-lg-8 mx-auto">
             @csrf
-
             <div class="form-row mb-2">
                 <div class="form-group col-md-6 pl-md-2">
                     <label for="bulan">Bulan, Tahun</label>
@@ -45,10 +44,10 @@
                     @enderror
                 </div>
                 <div class="form-group col-md-4 pl-md-2">
-                    <label for="id_guru">Jumlah Alpha</label>
-                    <input id="alpha" type="number" name="alpha" id="alpha"
-                        class="form-control @error('alpha') is-invalid @enderror" value="{{ old('alpha') }}" required>
-                    @error('alpha')
+                    <label for="tidak_hadir">Jumlah Tidak Hadir</label>
+                    <input id="tidak_hadir" type="number" name="tidak_hadir" id="tidak_hadir"
+                        class="form-control @error('tidak_hadir') is-invalid @enderror" value="{{ old('tidak_hadir') }}" required>
+                    @error('tidak_hadir')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>

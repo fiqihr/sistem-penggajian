@@ -44,31 +44,15 @@ class GajiController extends Controller
                     return formatRupiah($row->total_gaji);
                 })
                 ->addColumn('action', function ($row) {
-                    // $showBtn = '<a href="' . route('potongan-gaji.show', $row->id_potongan_gaji) . '" class="btn btn-primary btn-user text-white"><i class="fa-solid fa-eye"></i><span class="ml-2">Detail</span></a>';
                     $showBtn = '<a href="' . route('gaji.show', $row->id_gaji) . '" class="ml-2 btn btn-primary text-white d-flex align-items-center"><i class="fa-solid fa-note-sticky"></i><span class="ml-2">Lihat</span></a>';
-                    // $editBtn = '<a href="' . route('potongan-gaji.edit', $row->id_potongan_gaji) . '" class="ml-2 btn btn-warning text-white"><i class="fa-solid fa-pen-nib"></i><span class="ml-2">Edit</span></a>';
-                    // $deleteBtn = '<form id="delete-form-' . $row->id_gaji . '" action="' . route('gaji.destroy', $row->id_gaji) . '" method="POST" style="display:inline;">
-                    //     ' . csrf_field() . '
-                    //     ' . method_field('DELETE') . '
-                    //     <button type="button" onclick="deleteGaji(' . $row->id_gaji . ')" class="btn btn-danger">
-                    //         <i class="fa-solid fa-trash"></i><span class="ml-2 ">Hapus</span>
-                    //     </button>
-                    // </form>';
 
-                    //                 $kirimBtn = '
-                    // <form id="kirim-form-' . $row->id_gaji . '" action="' . route('gaji.kirim', $row->id_gaji) . '" method="POST" style="display: inline;">
-                    //     ' . csrf_field() . '
-                    //     <button type="button" onclick="kirimGaji(' . $row->id_gaji . ')" class="ml-2 btn btn-warning text-white">
-                    //         <i class="fas fa-hand-holding-usd"></i><span class="ml-2">Kirim</span>
-                    //     </button>
-                    // </form>';
                     $cekStatusGaji = $row->status;
                     if ($cekStatusGaji == 'belum') {
-                        $kirimBtn = '<button onclick="kirimGaji(' . $row->id_gaji . ')" class="ml-2 btn btn-warning text-white d-flex align-items-center"><i class="fa-solid fa-money-check-dollar"></i><span class="ml-2">Kirim</span></button>';
+                        $kirimBtn = '<button onclick="kirimGaji(' . $row->id_gaji . ')" class="ml-2 btn btn-warning text-white d-flex align-items-center"><i class="fa-solid fa-money-check-dollar"></i><span class="ml-2">Serahkan</span></button>';
                     } elseif ($cekStatusGaji == 'dikirim') {
-                        $kirimBtn = '<button class="ml-2 btn btn-info text-white d-flex align-items-center"><i class="fa-solid fa-hand-holding-dollar"></i><span class="ml-2">Dikirim</span></button>';
+                        $kirimBtn = '<button class="ml-2 btn btn-info text-white d-flex align-items-center"><i class="fa-solid fa-hand-holding-dollar"></i><span class="ml-2">Diserahkan</span></button>';
                     } else {
-                        $kirimBtn = '<button class="ml-2 btn btn-success text-white d-flex align-items-center"><i class="fa-solid fa-check"></i><span class="ml-2">Selesai</span></button>';
+                        $kirimBtn = '<button class="ml-2 btn btn-success text-white d-flex align-items-center"><i class="fa-solid fa-check"></i><span class="ml-2">Diterima</span></button>';
                     }
 
 
@@ -86,8 +70,9 @@ class GajiController extends Controller
     public function create()
     {
         $semua_guru = Guru::with('user')->get();
-        $semua_potongan = PotonganGaji::all();
-        return view('gaji.create', compact('semua_guru'));
+        // $semua_potongan = PotonganGaji::all();
+        $semua_tunjangan = Tunjangan::all();
+        return view('gaji.create', compact('semua_guru', 'semua_tunjangan'));
     }
 
     /**
@@ -97,24 +82,21 @@ class GajiController extends Controller
     {
         $id_guru = $request->id_guru;
         $bulan = $request->bulan;
-        $jml_tunjangan = $request->jml_tunjangan;
-        $potongan = $request->total_potongan;
+        $id_tunjangan = $request->id_tunjangan ?? null;
+        $potongan = $request->potongan;
         $total_gaji = $request->total_gaji;
 
-        $simpan_tunjangan = Tunjangan::create([
-            'bulan' => $bulan,
-            'id_guru' => $id_guru,
-            'jml_tunjangan' => $jml_tunjangan,
-        ]);
+
 
         $simpan_gaji = Gaji::create([
             'bulan' => $bulan,
             'id_guru' => $id_guru,
+            'id_tunjangan' => $id_tunjangan,
             'potongan' => $potongan,
             'total_gaji' => $total_gaji,
         ]);
 
-        if ($simpan_tunjangan && $simpan_gaji) {
+        if ($simpan_gaji) {
             session()->flash('berhasil', 'Gaji Guru berhasil dicetak!');
             return redirect()->route('gaji.index');
         } else {
@@ -172,10 +154,16 @@ class GajiController extends Controller
 
         $bulan_presensi = $gaji->bulan;
         $id_guru = $gaji->id_guru;
+        $id_tunjangan = $gaji->id_tunjangan;
         $presensi = Presensi::where('bulan', $bulan_presensi)->where('id_guru', $id_guru)->first();
 
         $gaji_pokok = Guru::where('id_guru', $id_guru)->first()->jabatan->gaji_pokok;
-        $jml_tunjangan = Tunjangan::where('bulan', $bulan_presensi)->where('id_guru', $id_guru)->first()->jml_tunjangan;
+
+        if (!$id_tunjangan == null) {
+            $jml_tunjangan = Tunjangan::where('id_tunjangan', $id_tunjangan)->first()->jml_tunjangan;
+        } else {
+            $jml_tunjangan = 0;
+        }
 
         $total_bruto = $gaji_pokok + $jml_tunjangan;
 
@@ -283,10 +271,21 @@ class GajiController extends Controller
     public function detailGaji(Request $request)
     {
         $id_guru = $request->id_guru;
+        $nama_guru = Guru::where('id_guru', $id_guru)->first()->user->name;
         $bulan = $request->bulan;
+        $format_bulan = formatBulan($bulan);
+        $id_tunjangan = $request->id_tunjangan;
+        $jml_tunjangan = Tunjangan::find($id_tunjangan)->jml_tunjangan ?? 0;
+
+        $cek_data = Gaji::where('bulan', $bulan)->where('id_guru', $id_guru)->first();
+        if ($cek_data) {
+            session()->flash('gagal', "Gaji guru {$nama_guru} pada bulan {$format_bulan} sudah dicetak!");
+            return redirect()->route('gaji.create');
+        }
+
         $nama_guru = Guru::where('id_guru', $id_guru)->first()->user->name;
         $gaji_pokok = Guru::where('id_guru', $id_guru)->first()->jabatan->gaji_pokok;
-        $jml_tunjangan = $request->jml_tunjangan;
+
         $total_bruto = $gaji_pokok + $jml_tunjangan;
         $presensi = Presensi::where('bulan', $bulan)->where('id_guru', $id_guru)->first();
 
@@ -322,6 +321,7 @@ class GajiController extends Controller
             'potongan_lazisnu',
             'total_potongan',
             'total_gaji',
+            'id_tunjangan'
         ));
     }
 }

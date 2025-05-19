@@ -12,13 +12,8 @@ $(document).ready(function () {
                 className: "align-middle text-center",
             },
             {
-                data: "bulan",
-                name: "bulan",
-                className: "align-middle",
-            },
-            {
-                data: "id_guru",
-                name: "id_guru",
+                data: "nama_tunjangan",
+                name: "nama_tunjangan",
                 className: "align-middle",
             },
             {
@@ -69,7 +64,7 @@ function tunjanganBerhasil(message) {
     });
 }
 
-function deleteJabatan(id) {
+function deleteTunjangan(id) {
     Swal.fire({
         text: "Apakah kamu yakin?",
         icon: "warning",

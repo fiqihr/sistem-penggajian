@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\PotonganGaji;
+use App\Models\Tunjangan;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -40,6 +41,29 @@ class DatabaseSeeder extends Seeder
                 'nama_potongan' => 'Lazisnu',
                 'jml_potongan' => 0,
             ]
+        ]);
+
+        Tunjangan::factory()->createMany([
+            [
+                'nama_tunjangan' => 'Kepala Sekolah',
+                'jml_tunjangan' => 750000,
+            ],
+            [
+                'nama_tunjangan' => 'Wali Kelas',
+                'jml_tunjangan' => 200000,
+            ],
+            [
+                'nama_tunjangan' => 'Wakil Kepala Sekolah',
+                'jml_tunjangan' => 500000,
+            ],
+            [
+                'nama_tunjangan' => 'Kepala Program',
+                'jml_tunjangan' => 450000,
+            ],
+            [
+                'nama_tunjangan' => 'Pembina Eskul',
+                'jml_tunjangan' => 150000,
+            ],
         ]);
     }
 }
