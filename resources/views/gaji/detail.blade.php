@@ -48,7 +48,14 @@
                         <td>:</td>
                         <td>{{ $sakit }} x {{ formatRupiah($potongan_sakit) }}</td>
                     </tr>
-                    <tr>
+                    @foreach ($semua_jenis_potongan as $potongan)
+                        <tr>
+                            <td>{{ $potongan->nama_potongan }}</td>
+                            <td>:</td>
+                            <td>{{ formatRupiah($potongan->jml_potongan) }}</td>
+                        </tr>
+                    @endforeach
+                    {{-- <tr>
                         <td>BPR</td>
                         <td>:</td>
                         <td>{{ formatRupiah($potongan_bpr) }}</td>
@@ -57,7 +64,7 @@
                         <td>Lazisnu</td>
                         <td>:</td>
                         <td>{{ formatRupiah($potongan_lazisnu) }}</td>
-                    </tr>
+                    </tr> --}}
                     <tr>
                         <td>Total Potongan</td>
                         <td>:</td>
@@ -78,5 +85,5 @@
             </div>
         </form>
     </div>
-    
+
 </x-layout>

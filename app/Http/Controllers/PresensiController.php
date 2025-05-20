@@ -41,7 +41,7 @@ class PresensiController extends Controller
                     $deleteBtn = '<form id="delete-form-' . $row->id_presensi . '" action="' . route('presensi.destroy', $row->id_presensi) . '" method="POST" style="display:inline;">
                     ' . csrf_field() . '
                     ' . method_field('DELETE') . '
-                    <button type="button" onclick="deleteJabatan(' . $row->id_presensi . ')" class="btn btn-danger">
+                    <button type="button" onclick="deletePresensi(' . $row->id_presensi . ')" class="btn btn-danger">
                         <i class="fa-solid fa-trash"></i><span class="ml-2">Hapus</span>
                     </button>
                 </form>';
@@ -190,8 +190,15 @@ class PresensiController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $hapus = Presensi::where('id_presensi', $id)->delete();
+        if ($hapus) {
+            session()->flash('berhasil', 'Presensi berhasil dihapus!');
+            return redirect()->route('presensi.index');
+        } else {
+            return redirect()->back();
+        }
     }
+
     public function laporanPresensiIndex()
     {
         return view('laporan.lap-presensi');

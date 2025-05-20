@@ -163,7 +163,16 @@ class GuruController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $guru = Guru::find($id);
+        $user = $guru->user;
+        $hapus_guru = $guru->delete();
+        $hapus_user = $user->delete();
+        if ($hapus_guru && $hapus_user) {
+            session()->flash('berhasil', 'Data guru berhasil dihapus!');
+            return redirect()->route('guru.index');
+        } else {
+            return redirect()->back();
+        }
     }
 
     public function uploadPhoto(Request $request, $id)

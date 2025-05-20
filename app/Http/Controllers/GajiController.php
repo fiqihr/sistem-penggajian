@@ -87,8 +87,6 @@ class GajiController extends Controller
         $potongan = $request->potongan;
         $total_gaji = $request->total_gaji;
 
-
-
         $simpan_gaji = Gaji::create([
             'bulan' => $bulan,
             'id_guru' => $id_guru,
@@ -176,14 +174,21 @@ class GajiController extends Controller
 
         $potongan_sakit = PotonganGaji::where('nama_potongan', 'Sakit')->first()->jml_potongan;
         $potongan_tidak_hadir = PotonganGaji::where('nama_potongan', 'Tidak Hadir')->first()->jml_potongan;
-        $potongan_bpr = PotonganGaji::where('nama_potongan', 'BPR')->first()->jml_potongan;
-        $potongan_lazisnu = PotonganGaji::where('nama_potongan', 'Lazisnu')->first()->jml_potongan;
+        // $potongan_bpr = PotonganGaji::where('nama_potongan', 'BPR')->first()->jml_potongan;
+        // $potongan_lazisnu = PotonganGaji::where('nama_potongan', 'Lazisnu')->first()->jml_potongan;
+
+        $semua_jenis_potongan = PotonganGaji::where('nama_potongan', 'not like', '%sakit%')->where('nama_potongan', 'not like', '%tidak hadir%')->get();
+        $cek_jml_potongan = [];
+        foreach ($semua_jenis_potongan as $potongan) {
+            $cek_jml_potongan[] = $potongan->jml_potongan;
+        }
+        $foreach_potongan_lain = array_sum($cek_jml_potongan);
 
         $total_potongan_tidak_hadir = $potongan_tidak_hadir * $tidak_hadir;
         $total_potongan_sakit = $potongan_sakit * $sakit;
 
         $potongan_sakit_dan_tidak_hadir = $total_potongan_tidak_hadir + $total_potongan_sakit;
-        $total_potongan = $potongan_sakit_dan_tidak_hadir + $potongan_bpr + $potongan_lazisnu;
+        $total_potongan = $potongan_sakit_dan_tidak_hadir + $foreach_potongan_lain;
 
 
         if (Auth::user()->hak_akses == 'guru') {
@@ -198,15 +203,16 @@ class GajiController extends Controller
             'sakit' => $sakit,
             'potongan_tidak_hadir' => $potongan_tidak_hadir,
             'potongan_sakit' => $potongan_sakit,
-            'potongan_bpr' => $potongan_bpr,
-            'potongan_lazisnu' => $potongan_lazisnu,
+            // 'potongan_bpr' => $potongan_bpr,
+            // 'potongan_lazisnu' => $potongan_lazisnu,
             'tidak_hadir' => $tidak_hadir,
             'sakit' => $sakit,
             'jml_tunjangan' => $jml_tunjangan,
             'nama_tunjangan' => $nama_tunjangan,
             'total_bruto' => $total_bruto,
             'potongan_sakit_dan_tidak_hadir' => $potongan_sakit_dan_tidak_hadir,
-            'total_potongan' => $total_potongan
+            'total_potongan' => $total_potongan,
+            'semua_jenis_potongan' => $semua_jenis_potongan,
         ])->setPaper('A4', 'portrait');
 
         return $pdf->stream('Slip-Gaji.pdf');
@@ -298,13 +304,20 @@ class GajiController extends Controller
 
         $potongan_sakit = PotonganGaji::where('nama_potongan', 'Sakit')->first()->jml_potongan;
         $potongan_tidak_hadir = PotonganGaji::where('nama_potongan', 'Tidak Hadir')->first()->jml_potongan;
-        $potongan_bpr = PotonganGaji::where('nama_potongan', 'BPR')->first()->jml_potongan;
-        $potongan_lazisnu = PotonganGaji::where('nama_potongan', 'Lazisnu')->first()->jml_potongan;
+        // $potongan_bpr = PotonganGaji::where('nama_potongan', 'BPR')->first()->jml_potongan;
+        // $potongan_lazisnu = PotonganGaji::where('nama_potongan', 'Lazisnu')->first()->jml_potongan;
+
+        $semua_jenis_potongan = PotonganGaji::where('nama_potongan', 'not like', '%sakit%')->where('nama_potongan', 'not like', '%tidak hadir%')->get();
+        $cek_jml_potongan = [];
+        foreach ($semua_jenis_potongan as $potongan) {
+            $cek_jml_potongan[] = $potongan->jml_potongan;
+        }
+        $foreach_potongan_lain = array_sum($cek_jml_potongan);
 
         $total_potongan_tidak_hadir = $potongan_tidak_hadir * $tidak_hadir;
         $total_potongan_sakit = $potongan_sakit * $sakit;
 
-        $total_potongan = $total_potongan_tidak_hadir + $total_potongan_sakit + $potongan_bpr + $potongan_lazisnu;
+        $total_potongan = $total_potongan_tidak_hadir + $total_potongan_sakit + $foreach_potongan_lain;
 
         $total_gaji = $total_bruto - $total_potongan;
         // $
@@ -321,11 +334,12 @@ class GajiController extends Controller
             'sakit',
             'potongan_sakit',
             'potongan_tidak_hadir',
-            'potongan_bpr',
-            'potongan_lazisnu',
+            // 'potongan_bpr',
+            // 'potongan_lazisnu',
             'total_potongan',
             'total_gaji',
-            'id_tunjangan'
+            'id_tunjangan',
+            'semua_jenis_potongan'
         ));
     }
 }

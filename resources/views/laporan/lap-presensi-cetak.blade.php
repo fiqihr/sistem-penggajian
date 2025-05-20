@@ -163,7 +163,7 @@
                 <th>Nama Guru</th>
                 <th>Hadir</th>
                 <th>Sakit</th>
-                <th>Alpha</th>
+                <th>Tidak Hadir</th>
             </tr>
         </thead>
         <tbody>
@@ -173,7 +173,7 @@
                     <td>{{ $item->guru->user->name }}</td>
                     <td>{{ $item->hadir }}</td>
                     <td>{{ $item->sakit }}</td>
-                    <td>{{ $item->alpha }}</td>
+                    <td>{{ $item->tidak_hadir }}</td>
                 </tr>
             @endforeach
         </tbody>

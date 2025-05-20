@@ -95,14 +95,10 @@ class JabatanController extends Controller
         $request->validate([
             'nama_jabatan' => 'required|string|max:255',
             'gaji_pokok' => 'required|numeric',
-            'tj_transport' => 'required|numeric',
-            'uang_makan' => 'required|numeric',
         ]);
         $update = Jabatan::where('id_jabatan', $id)->update([
             'nama_jabatan' => $request->nama_jabatan,
             'gaji_pokok' => $request->gaji_pokok,
-            'tj_transport' => $request->tj_transport,
-            'uang_makan' => $request->uang_makan,
         ]);
 
         if ($update) {
