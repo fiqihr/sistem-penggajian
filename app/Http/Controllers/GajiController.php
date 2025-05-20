@@ -37,6 +37,11 @@ class GajiController extends Controller
                 ->editColumn('gaji_pokok', function ($row) {
                     return formatRupiah($row->guru->jabatan->gaji_pokok);
                 })
+                ->editColumn('id_tunjangan', function ($row) {
+                    $nama_tunjangan = $row->tunjangan->nama_tunjangan ?? 'Tidak ada tunjangan';
+                    $jml_tunjangan = $row->tunjangan->jml_tunjangan ?? 0;
+                    return formatRupiah($jml_tunjangan) . ' (' . $nama_tunjangan . ')';
+                })
                 ->editColumn('potongan', function ($row) {
                     return formatRupiah($row->potongan);
                 })

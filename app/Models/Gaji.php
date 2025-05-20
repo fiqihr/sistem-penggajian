@@ -21,9 +21,9 @@ class Gaji extends Model
     {
         return $this->belongsTo(Jabatan::class, 'id_jabatan', 'id_jabatan');
     }
-    
+
     public function tunjangan()
     {
-        return $this->belongsTo(Jabatan::class, 'id_tunjangan', 'id_tunjangan');
+        return $this->belongsTo(Tunjangan::class, 'id_tunjangan', 'id_tunjangan');
     }
 }

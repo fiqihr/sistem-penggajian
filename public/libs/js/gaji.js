@@ -32,6 +32,11 @@ $(document).ready(function () {
                 className: "align-middle",
             },
             {
+                data: "id_tunjangan",
+                name: "id_tunjangan",
+                className: "align-middle",
+            },
+            {
                 data: "potongan",
                 name: "potongan",
                 className: "align-middle",

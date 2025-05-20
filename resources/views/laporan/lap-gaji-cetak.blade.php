@@ -163,6 +163,7 @@
                 <th>Nama Guru</th>
                 <th>Jabatan</th>
                 <th>Jumlah Gaji</th>
+                <th>Tunjangan</th>
                 <th>Potongan</th>
                 <th>Total Gaji</th>
             </tr>
@@ -173,7 +174,9 @@
                     <td style="text-align: center;">{{ $loop->iteration }}</td>
                     <td>{{ $item->guru->user->name }}</td>
                     <td>{{ $item->guru->jabatan->nama_jabatan }}</td>
-                    <td>{{ formatRupiah($item->guru->jabatan->gaji_pokok + $item->guru->jabatan->tj_transport + $item->guru->jabatan->uang_makan) }}
+                    <td>{{ formatRupiah($item->guru->jabatan->gaji_pokok) }}
+                    <td>{{ formatRupiah($item->tunjangan->jml_tunjangan) }} <br>
+                        ({{ $item->tunjangan->nama_tunjangan }})
                     </td>
                     <td>{{ formatRupiah($item->potongan) }}</td>
                     <td><strong>{{ formatRupiah($item->total_gaji) }}</strong></td>

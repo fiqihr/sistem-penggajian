@@ -16,6 +16,7 @@
                     <th>Nama Guru</th>
                     <th>Jabatan</th>
                     <th>Gaji Pokok</th>
+                    <th>Tunjangan</th>
                     <th>Potongan</th>
                     <th>Total Gaji</th>
                     <th class="text-center">Aksi</th>
