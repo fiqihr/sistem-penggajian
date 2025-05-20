@@ -33,7 +33,7 @@
             </div>
             <hr class="mb-4 mt-4">
             <div class="d-flex justify-content-end">
-                <button type="submit" class=" btn btn-primary"><i class="fa-solid fa-pen-nib"></i>
+                <button type="submit" class=" btn btn-orange"><i class="fa-solid fa-pen-nib"></i>
                     <span class="ml-1">Update</span>
                 </button>
             </div>

@@ -84,8 +84,6 @@ function gajiBerhasil(message) {
     });
 }
 
-
-
 function deleteGaji(id) {
     Swal.fire({
         text: "Apakah kamu yakin?",
@@ -129,7 +127,7 @@ function kirimGaji(id) {
                     Swal.fire({
                         position: "center",
                         icon: "success",
-                        text: data.message || "Slip gaji berhasil dikirim!",
+                        text: data.message || "Slip gaji berhasil diserahkan!",
                         showConfirmButton: false,
                         timer: 1500,
                     });

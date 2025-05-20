@@ -6,7 +6,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-    <title>Slip Gaji</title>
+    <title>Laporan Gaji SMK Yabujjah Periode {{ formatBulan($bulan) }}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -159,6 +159,7 @@
     <table id="data-gaji" class="w-100">
         <thead>
             <tr>
+                <th>No.</th>
                 <th>Nama Guru</th>
                 <th>Jabatan</th>
                 <th>Jumlah Gaji</th>
@@ -169,6 +170,7 @@
         <tbody>
             @foreach ($semuaGaji as $item)
                 <tr>
+                    <td style="text-align: center;">{{ $loop->iteration }}</td>
                     <td>{{ $item->guru->user->name }}</td>
                     <td>{{ $item->guru->jabatan->nama_jabatan }}</td>
                     <td>{{ formatRupiah($item->guru->jabatan->gaji_pokok + $item->guru->jabatan->tj_transport + $item->guru->jabatan->uang_makan) }}

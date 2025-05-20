@@ -36,7 +36,7 @@
         </div>
     </div>
     <div class="container-fluid bg-white rounded-lg p-4 shadow-sm mb-5">
-        <table id="my-table" class="table table-bordered table-striped small w-100">
+        <table id="my-table" class="table table-bordered table-striped small w-100 text-gray-800">
             <thead id="mytable-thead">
                 <tr>
                     <th class="text-center">No</th>

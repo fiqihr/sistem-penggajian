@@ -94,7 +94,7 @@
 
                 if (!bulanTersedia.includes(selected)) {
                     // Tampilkan pesan error & beri warna merah
-                    $('#bulan-error').text('Presensi Guru belum diisi pada bulan tersebut.').show();
+                    $('#bulan-error').text('Presensi Guru belum diisi pada bulan ini.').show();
                     $('#bulan').addClass('is-invalid'); // Bootstrap: border merah
                     $('#btn-submit').prop('disabled', true);
                 } else {

@@ -40,7 +40,7 @@
 
 </head>
 
-<body id="page-top">
+<body id="page-top" class="text-gray-800">
 
     <!-- Page Wrapper -->
     <div id="wrapper">

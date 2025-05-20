@@ -44,7 +44,7 @@ class GajiController extends Controller
                     return formatRupiah($row->total_gaji);
                 })
                 ->addColumn('action', function ($row) {
-                    $showBtn = '<a href="' . route('gaji.show', $row->id_gaji) . '" class="ml-2 btn btn-primary text-white d-flex align-items-center"><i class="fa-solid fa-note-sticky"></i><span class="ml-2">Lihat</span></a>';
+                    $showBtn = '<a target="_blank" href="' . route('gaji.show', $row->id_gaji) . '" class="ml-2 btn btn-primary text-white d-flex align-items-center"><i class="fa-solid fa-note-sticky"></i><span class="ml-2">Lihat</span></a>';
 
                     $cekStatusGaji = $row->status;
                     if ($cekStatusGaji == 'belum') {
@@ -70,6 +70,7 @@ class GajiController extends Controller
     public function create()
     {
         $semua_guru = Guru::with('user')->get();
+
         // $semua_potongan = PotonganGaji::all();
         $semua_tunjangan = Tunjangan::all();
         return view('gaji.create', compact('semua_guru', 'semua_tunjangan'));
@@ -161,8 +162,10 @@ class GajiController extends Controller
 
         if (!$id_tunjangan == null) {
             $jml_tunjangan = Tunjangan::where('id_tunjangan', $id_tunjangan)->first()->jml_tunjangan;
+            $nama_tunjangan = Tunjangan::where('id_tunjangan', $id_tunjangan)->first()->nama_tunjangan;
         } else {
             $jml_tunjangan = 0;
+            $nama_tunjangan = "-";
         }
 
         $total_bruto = $gaji_pokok + $jml_tunjangan;
@@ -200,6 +203,7 @@ class GajiController extends Controller
             'tidak_hadir' => $tidak_hadir,
             'sakit' => $sakit,
             'jml_tunjangan' => $jml_tunjangan,
+            'nama_tunjangan' => $nama_tunjangan,
             'total_bruto' => $total_bruto,
             'potongan_sakit_dan_tidak_hadir' => $potongan_sakit_dan_tidak_hadir,
             'total_potongan' => $total_potongan
@@ -243,7 +247,7 @@ class GajiController extends Controller
     {
         $kirim = Gaji::where('id_gaji', $id)->update(['status' => 'dikirim']);
         if ($kirim) {
-            return response()->json(['message' => 'Slip Gaji Guru berhasil dikirim!']);
+            return response()->json(['message' => 'Slip Gaji Guru berhasil diserahkan!']);
         } else {
             return response()->json(['message' => 'Gagal mengirim slip gaji.'], 500);
         }

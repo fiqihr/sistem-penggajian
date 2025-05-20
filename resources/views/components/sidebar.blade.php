@@ -12,50 +12,50 @@
     <hr class="sidebar-divider my-0">
 
     <!-- Nav Item - Dashboard -->
-    <li class="nav-item active">
+    <li class="nav-item {{ request()->is('/') ? 'active' : '' }}">
         <a class="nav-link" href="/">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard</span></a>
     </li>
     @if (Auth::user()->hak_akses == 'guru')
-        <li class="nav-item">
+        <li class="nav-item {{ request()->is('gaji-saya*') ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('gaji-saya.index') }}">
                 <i class="fa-solid fa-coins"></i>
                 <span>Gaji Saya</span></a>
         </li>
     @elseif (Auth::user()->hak_akses == 'admin')
         <!-- Nav Item - Tables -->
-        <li class="nav-item">
+        <li class="nav-item {{ request()->is('jabatan*') ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('jabatan.index') }}">
                 <i class="fa-solid fa-briefcase"></i>
                 <span>Jabatan</span></a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item {{ request()->is('guru*') ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('guru.index') }}">
                 <i class="fa-solid fa-user-tie"></i>
                 <span>Guru</span></a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item {{ request()->is('presensi*') ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('presensi.index') }}">
                 <i class="fa-solid fa-list-check"></i>
                 <span>Presensi</span></a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item {{ request()->is('potongan-gaji*') ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('potongan-gaji.index') }}">
                 <i class="fa-solid fa-folder-minus"></i>
                 <span>Potongan Gaji</span></a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item {{ request()->is('tunjangan*') ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('tunjangan.index') }}">
                 <i class="fa-solid fa-comment-dollar"></i>
                 <span>Tunjangan</span></a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item {{ request()->is('gaji*') ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('gaji.index') }}">
                 <i class="fa-solid fa-coins"></i>
                 <span>Gaji</span></a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item {{ request()->is('laporan*') ? 'active' : '' }}">
             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
                 aria-expanded="true" aria-controls="collapseTwo">
                 <i class="fa-solid fa-copy"></i>

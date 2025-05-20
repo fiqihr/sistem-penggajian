@@ -159,7 +159,7 @@
             <td class="value">{{ formatRupiah($gaji->guru->jabatan->gaji_pokok) }}</td>
         </tr>
         <tr>
-            <td class="label">- Tunjangan</td>
+            <td class="label">- Tunjangan ({{ $nama_tunjangan }})</td>
             <td class="value">{{ formatRupiah($jml_tunjangan) }}</td>
         </tr>
         <tr>
