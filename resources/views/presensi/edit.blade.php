@@ -1,7 +1,7 @@
-<x-layout>
+<x-layout title="Edit Presensi">
     <div class="mt-5 mb-4">
         <h3 class="">Edit Presensi</h3>
-        <p class="small font-italic">Presensi &rsaquo; Edit Presensi</p>
+        <p class="small font-italic">Data Presensi &rsaquo; Edit Presensi</p>
     </div>
     <div class="container-fluid  bg-white rounded-lg p-4 shadow-sm">
         <form action="{{ route('presensi.update', $data->id_presensi) }}" method="POST" class="col-lg-8 mx-auto">

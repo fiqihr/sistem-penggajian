@@ -1,6 +1,8 @@
-<x-layout>
-    <h3 class="mt-5 mb-4">Data Gaji Guru</h3>
-
+<x-layout title="Gaji Guru">
+    <div class="mt-5 mb-4">
+        <h3 class="">Gaji Guru</h3>
+        <p class="small font-italic">Data Gaji</p>
+    </div>
     <div class="mb-2 d-flex justify-content-end">
         <a href="{{ route('gaji.create') }}" class="btn btn-info">
             <i class="fa-solid fa-clipboard-list"></i><span class=" ml-2">Buat Slip Gaji</span>

@@ -1,7 +1,7 @@
-<x-layout>
+<x-layout title="Edit Guru">
     <div class="mt-5 mb-4">
         <h3 class="">Edit Guru</h3>
-        <p class="small font-italic">Guru &rsaquo; Edit guru</p>
+        <p class="small font-italic">Data Guru &rsaquo; Edit guru</p>
     </div>
     <div class="container-fluid bg-white rounded-lg p-4 shadow-sm mb-5">
         <div class="row">

@@ -1,6 +1,8 @@
-<x-layout>
-    <h3 class="mt-5 mb-4">Jabatan</h3>
-
+<x-layout title="Jabatan">
+    <div class="mt-5 mb-4">
+        <h3 class="">Jabatan</h3>
+        <p class="small font-italic">Jabatan Guru</p>
+    </div>
     <div class="mb-2 d-flex justify-content-end">
         <a href="{{ route('jabatan.create') }}" class="btn btn-primary">
             <i class="fas fa-plus"></i><span class=" ml-2">Tambah Jabatan</span>

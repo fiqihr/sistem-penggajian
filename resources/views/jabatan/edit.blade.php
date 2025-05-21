@@ -1,7 +1,7 @@
-<x-layout>
+<x-layout title="Edit Jabatan">
     <div class="mt-5 mb-4">
         <h3 class="">Edit Jabatan</h3>
-        <p class="small font-italic">Jabatan &rsaquo; Edit Jabatan</p>
+        <p class="small font-italic">Jabatan Guru &rsaquo; Edit Jabatan</p>
     </div>
 
     <div class="container-fluid  bg-white rounded-lg p-4 shadow-sm">

@@ -1,7 +1,7 @@
-<x-layout>
+<x-layout title="Isi Presensi">
     <div class="mt-5 mb-4">
-        <h3 class="">Isi presensi</h3>
-        <p class="small font-italic">presensi &rsaquo; Isi presensi</p>
+        <h3 class="">Isi Presensi</h3>
+        <p class="small font-italic">Data Presensi &rsaquo; Isi Presensi</p>
     </div>
     <div class="container-fluid  bg-white rounded-lg p-4 shadow-sm">
         <form action="{{ route('presensi.store') }}" method="POST" class="col-lg-8 mx-auto">
@@ -46,7 +46,8 @@
                 <div class="form-group col-md-4 pl-md-2">
                     <label for="tidak_hadir">Jumlah Tidak Hadir</label>
                     <input id="tidak_hadir" type="number" name="tidak_hadir" id="tidak_hadir"
-                        class="form-control @error('tidak_hadir') is-invalid @enderror" value="{{ old('tidak_hadir') }}" required>
+                        class="form-control @error('tidak_hadir') is-invalid @enderror" value="{{ old('tidak_hadir') }}"
+                        required>
                     @error('tidak_hadir')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror

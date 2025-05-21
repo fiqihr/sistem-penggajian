@@ -1,6 +1,8 @@
-<x-layout>
-    <h3 class="mt-5 mb-4">Guru</h3>
-
+<x-layout title="Guru">
+    <div class="mt-5 mb-4">
+        <h3 class="">Guru</h3>
+        <p class="small font-italic">Data Guru</p>
+    </div>
     <div class="mb-2 d-flex justify-content-end">
         <a href="{{ route('guru.create') }}" class="btn btn-primary">
             <i class="fas fa-plus"></i><span class=" ml-2">Tambah guru</span>

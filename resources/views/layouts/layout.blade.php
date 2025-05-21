@@ -10,7 +10,9 @@
     <meta name="author" content="">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Sistem Penggajian SMK</title>
+    {{-- <title>Sistem Penggajian SMK Yabujjah</title> --}}
+    <title> {{ ($title ? $title . ' | ' : '') . config('app.name') }}</title>
+    <link rel="icon" href="{{ asset('libs/img/logo-smk.png') }}" type="image/x-icon" />
 
     <!-- Font Awesome 6 -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">

@@ -1,7 +1,7 @@
-<x-layout>
+<x-layout title="Edit Potongan Gaji">
     <div class="mt-5 mb-4">
         <h3 class="">Edit Potongan Gaji</h3>
-        <p class="small font-italic">Potongan Gaji &rsaquo; Edit potongan Gaji</p>
+        <p class="small font-italic">Data Potongan Gaji &rsaquo; Edit Potongan Gaji</p>
     </div>
     <div class="container-fluid  bg-white rounded-lg p-4 shadow-sm">
         <form action="{{ route('potongan-gaji.update', $data->id_potongan_gaji) }}" method="POST"

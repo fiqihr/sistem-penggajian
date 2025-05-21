@@ -1,7 +1,7 @@
-<x-layout>
+<x-layout title="Tambah Guru">
     <div class="mt-5 mb-4">
         <h3 class="">Tambah Guru</h3>
-        <p class="small font-italic">Guru &rsaquo; Tambah guru</p>
+        <p class="small font-italic">Data Guru &rsaquo; Tambah guru</p>
     </div>
     <div class="container-fluid  bg-white rounded-lg p-4 shadow-sm  mb-5">
         <form action="{{ route('guru.store') }}" method="POST" class="col-lg-8 mx-auto">

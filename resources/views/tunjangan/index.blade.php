@@ -1,6 +1,8 @@
-<x-layout>
-    <h3 class="mt-5 mb-4">Tunjangan</h3>
-
+<x-layout title="Tunjangan Gaji">
+    <div class="mt-5 mb-4">
+        <h3 class="">Tunjangan Gaji</h3>
+        <p class="small font-italic">Data Tunjangan Gaji</p>
+    </div>
     <div class="mb-2 d-flex justify-content-end">
         <a href="{{ route('tunjangan.create') }}" class="btn btn-primary">
             <i class="fas fa-plus"></i><span class=" ml-2">Tambah Tunjangan Gaji</span>

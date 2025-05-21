@@ -1,7 +1,7 @@
-<x-layout>
+<x-layout title="Tambah Potongan Gaji">
     <div class="mt-5 mb-4">
         <h3 class="">Tambah Potongan Gaji</h3>
-        <p class="small font-italic">Potongan Gaji &rsaquo; Tambah potongan Gaji</p>
+        <p class="small font-italic">Data Potongan Gaji &rsaquo; Tambah Potongan Gaji</p>
     </div>
     <div class="container-fluid  bg-white rounded-lg p-4 shadow-sm">
         <form action="{{ route('potongan-gaji.store') }}" method="POST" class="col-lg-6 mx-auto">

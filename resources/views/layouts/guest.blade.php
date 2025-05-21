@@ -9,7 +9,8 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Sistem Penggajian || Login</title>
+    <title>Sistem Penggajian SMK Yabujjah || Login</title>
+    <link rel="icon" href="{{ asset('libs/img/logo-smk.png') }}" type="image/x-icon" />
 
     <!-- Custom fonts for this template-->
     <link href="{{ asset('libs/bootstrap/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">

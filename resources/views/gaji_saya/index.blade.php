@@ -1,7 +1,8 @@
-<x-layout>
-    <h3 class="mt-5 mb-4">Potongan Gaji</h3>
-
-
+<x-layout title="Gaji Saya">
+    <div class="mt-5 mb-4">
+        <h3 class="">Gaji Saya</h3>
+        <p class="small font-italic">Data Gaji Saya</p>
+    </div>
     <div class="container-fluid bg-white rounded-lg p-4 shadow-sm mb-5">
         <table id="my-table" class="table table-bordered table-striped small w-100">
             <thead id="mytable-thead">

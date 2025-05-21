@@ -1,5 +1,8 @@
-<x-layout>
-    <h3 class="mt-5 mb-4">Potongan Gaji</h3>
+<x-layout title="Potongan Gaji">
+    <div class="mt-5 mb-4">
+        <h3 class="">Potongan Gaji</h3>
+        <p class="small font-italic">Data Potongan Gaji</p>
+    </div>
 
     <div class="mb-2 d-flex justify-content-end">
         <a href="{{ route('potongan-gaji.create') }}" class="btn btn-primary">

@@ -1,6 +1,8 @@
-<x-layout>
-    <h3 class="mt-5 mb-4">Presensi</h3>
-    {{-- FILTER BULAN --}}
+<x-layout title="Presensi">
+    <div class="mt-5 mb-4">
+        <h3 class="">Presensi</h3>
+        <p class="small font-italic">Data Presensi</p>
+    </div> {{-- FILTER BULAN --}}
     <div class="py-4">
         <div class="d-flex justify-content-between align-items-end">
             <div class="bg-white px-4 py-3 rounded-lg shadow-sm">

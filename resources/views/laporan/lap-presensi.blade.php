@@ -1,4 +1,4 @@
-<x-layout>
+<x-layout title="Cetak Laporan Presensi">
     <div class="mt-5 mb-4">
         <h3 class="">Cetak Laporan Presensi</h3>
         <p class="small font-italic">Laporan &rsaquo; Cetak Laporan Presensi</p>

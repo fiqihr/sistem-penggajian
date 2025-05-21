@@ -201,6 +201,8 @@ class GajiController extends Controller
         }
 
         // dd($alpha, $sakit, $jmlPotonganAlpha, $jmlPotonganSakit);
+        $bulan_gaji = $gaji->bulan;
+        $nama_guru = $gaji->guru->user->name;
 
         $pdf = Pdf::loadView('gaji.slip', [
             'gaji' => $gaji,
@@ -220,7 +222,8 @@ class GajiController extends Controller
             'semua_jenis_potongan' => $semua_jenis_potongan,
         ])->setPaper('A4', 'portrait');
 
-        return $pdf->stream('Slip-Gaji.pdf');
+        $file_name = 'Slip Gaji - ' . formatBulan($bulan_gaji) . ' - ' . $nama_guru . '.pdf';
+        return $pdf->stream($file_name);
         // return view('gaji.slip', compact('gaji', 'alpha', 'sakit', 'jmlPotonganAlpha', 'jmlPotonganSakit'));
     }
 

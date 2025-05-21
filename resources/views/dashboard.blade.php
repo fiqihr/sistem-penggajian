@@ -1,4 +1,4 @@
-<x-layout>
+<x-layout title="Dashboard">
     @php
         $user = Auth::user();
         $akses = $user->hak_akses;

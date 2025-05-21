@@ -1,7 +1,7 @@
-<x-layout>
+<x-layout title="Detail Slip Gaji">
     <div class="mt-5 mb-4">
         <h3 class="">Detail Slip Gaji</h3>
-        <p class="small font-italic">Gaji &rsaquo; Cetak Slip Gaji &rsaquo; Detail Slip Gaji</p>
+        <p class="small font-italic">Data Gaji &rsaquo; Cetak Slip Gaji &rsaquo; Detail Slip Gaji</p>
     </div>
     <div class="container-fluid  bg-white rounded-lg p-4 shadow-sm">
         <form action="{{ route('gaji.store') }}" method="POST">
