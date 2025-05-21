@@ -13,6 +13,10 @@ use Illuminate\Support\Facades\App;
 use Yajra\DataTables\Facades\DataTables;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
+use App\Mail\KirimKodeSlipGaji;
 
 class GajiController extends Controller
 {
@@ -257,14 +261,59 @@ class GajiController extends Controller
         }
     }
 
+    // $kode = Str::random(6); // misalnya kode acak 6 karakter
+    //         $expired = now()->addHours(24); // kadaluarsa 24 jam dari sekarang
+
+    //         $gaji->kode_akses = $kode;
+    //         $gaji->kode_akses_expired = $expired;
+    //         $gaji->save();
+
+    //         // Kirim email ke guru
+    //         Mail::to($gaji->guru->user->email)->send(new SlipGajiEmail($kode, formatBulan($gaji->bulan)));
+
+    // public function kirimGaji(string $id)
+    // {
+    //     $kirim = Gaji::where('id_gaji', $id)->update(['status' => 'dikirim']);
+    //     if ($kirim) {
+    //         return response()->json(['message' => 'Slip Gaji Guru berhasil diserahkan!']);
+    //     } else {
+    //         return response()->json(['message' => 'Gagal mengirim slip gaji.'], 500);
+    //     }
+    // }
+
     public function kirimGaji(string $id)
     {
-        $kirim = Gaji::where('id_gaji', $id)->update(['status' => 'dikirim']);
-        if ($kirim) {
+        $gaji = Gaji::with('guru.user')->where('id_gaji', $id)->first();
+
+        if (!$gaji) {
+            return response()->json(['message' => 'Data gaji tidak ditemukan.'], 404);
+        }
+
+        $kode = strtoupper(Str::random(6)); // lkode acak 6 karakter
+        $expired_at = now()->addHours(24); // kadaluarsa 24 jam dari sekarang
+
+        $gaji->update([
+            'status' => 'dikirim',
+            'kode_akses' => $kode,
+            'kode_akses_expired' => $expired_at,
+        ]);
+
+        // kirim email
+        try {
+            Mail::to($gaji->guru->user->email)->send(new KirimKodeSlipGaji($gaji->guru, $kode));
             return response()->json(['message' => 'Slip Gaji Guru berhasil diserahkan!']);
-        } else {
+        } catch (\Exception $e) {
+            Log::error('Gagal mengirim email: ' . $e->getMessage());
             return response()->json(['message' => 'Gagal mengirim slip gaji.'], 500);
         }
+        // Mail::to($gaji->guru->user->email)->send(new KirimKodeSlipGaji($gaji->guru, $kode));
+
+        // return response()->json(['message' => 'Slip Gaji Guru berhasil diserahkan!']);
+        // if ($kirim_email) {
+        //     return response()->json(['message' => 'Slip Gaji Guru berhasil diserahkan!']);
+        // } else {
+        //     return response()->json(['message' => 'Gagal mengirim slip gaji.'], 500);
+        // }
     }
 
     public function laporanGajiIndex()

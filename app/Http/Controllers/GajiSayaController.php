@@ -60,9 +60,10 @@ class GajiSayaController extends Controller
                     if ($row->status == 'belum') {
                         $cetakBtn = '<a disabled class="ml-2 btn btn-secondary text-white"><i class="fa-solid fa-print"></i><span class="ml-2">Cetak</span></a>';
                     } else if ($row->status == 'dikirim') {
-                        $cetakBtn = '<a href="' . route('gaji.show', $row->id_gaji) . '" onclick="window.open(this.href, \'_blank\'); location.reload(); return false;"  class="ml-2 btn btn-warning text-white"><i class="fa-solid fa-print"></i><span class="ml-2">Cetak</span></a>';
+                        // $cetakBtn = '<a href="' . route('gaji.show', $row->id_gaji) . '" onclick="window.open(this.href, \'_blank\'); location.reload(); return false;"  class="ml-2 btn btn-warning text-white"><i class="fa-solid fa-print"></i><span class="ml-2">Cetak</span></a>';
+                        $cetakBtn = '<btn onclick="cekKode(' . $row->id_gaji . ')"  class="ml-2 btn btn-warning text-white"><i class="fa-solid fa-print"></i><span class="ml-2">Cetak</span></btnhref=>';
                     } else {
-                        $cetakBtn = '<a target="_blank" href="' . route('gaji.show', $row->id_gaji) . '" class="ml-2 btn btn-success text-white"><i class="fa-solid fa-file-circle-check"></i><span class="ml-2">Dilihat</span></a>';
+                        $cetakBtn = '<btn onclick="cekKode(' . $row->id_gaji . ')" class="ml-2 btn btn-success text-white"><i class="fa-solid fa-file-circle-check"></i><span class="ml-2">Dilihat</span></btn>';
                     }
 
 
@@ -120,5 +121,35 @@ class GajiSayaController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function cekKode(Request $request)
+    {
+        $request->validate([
+            'id' => 'required',
+            'kode' => 'required|string',
+        ]);
+
+        $gaji = Gaji::find($request->id);
+
+        if (!$gaji) {
+            return response()->json(['message' => 'Data gaji tidak ditemukan.'], 404);
+        }
+
+        // Cek apakah status dikirim dan kode sesuai dan belum kadaluarsa
+        if (
+            $gaji->status === 'dikirim' &&
+            $gaji->kode_akses === $request->kode &&
+            now()->lt($gaji->kode_akses_expired)
+        ) {
+            return response()->json([
+                'message' => 'Kode valid!',
+                'id' => $gaji->id_gaji, // untuk diarahkan ke /gaji/{id}
+            ]);
+        } else {
+            return response()->json([
+                'message' => 'Kode salah atau sudah kadaluarsa.'
+            ], 403);
+        }
     }
 }

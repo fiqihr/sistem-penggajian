@@ -1,7 +1,7 @@
-<x-layout title="Gaji Saya">
+<x-layout title="Kode Akses Saya">
     <div class="mt-5 mb-4">
-        <h3 class="">Gaji Saya</h3>
-        <p class="small font-italic">Data Gaji Saya</p>
+        <h3 class="">Kode Akses</h3>
+        <p class="small font-italic">Kode Akses Saya</p>
     </div>
     <div class="container-fluid bg-white rounded-lg p-4 shadow-sm mb-5">
         <table id="my-table" class="table table-bordered table-striped small w-100">
@@ -9,7 +9,7 @@
                 <tr>
                     <th class="text-center">No</th>
                     <th>Bulan</th>
-                    <th>Total Gaji</th>
+                    <th>Kode Akses</th>
                     <th class="text-center">Aksi</th>
                 </tr>
             </thead>
@@ -19,11 +19,11 @@
 
     @push('scripts')
         <script>
-            const gajiSayaRoute = "{{ route('gaji-saya.index') }}";
-            const gajiSayaMessage = {!! json_encode(session('berhasil')) !!};
+            const kodeAksesRoute = "{{ route('kode-akses.index') }}";
+            // const gajiSayaMessage = {!! json_encode(session('berhasil')) !!};
         </script>
-        <script src="{{ asset('libs/js/gaji_saya.js') }}"></script>
-        <script>
+        <script src="{{ asset('libs/js/kode_akses.js') }}"></script>
+        {{-- <script>
             function cekKode(idGaji) {
                 Swal.fire({
                     title: "Masukkan Kode Akses Slip Gaji",
@@ -65,6 +65,49 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         window.location.href = `/gaji/${result.value.id}`;
+                    }
+                });
+            }
+        </script> --}}
+        <script>
+            function salinKode(kode) {
+                navigator.clipboard.writeText(kode).then(() => {
+                    Swal.fire({
+                        position: "center",
+                        icon: "info",
+                        text: "Kode berhasil disalin!",
+                        showConfirmButton: false,
+                        timer: 1500,
+                    });
+                });
+            }
+
+            function generateKode(idGaji) {
+                Swal.fire({
+                    title: "Yakin ingin generate ulang kode?",
+                    text: "Kode lama akan diganti dan dikirim ulang ke email!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Ya, Generate!",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch(`/kode-akses/generate/${idGaji}`, {
+                                method: 'POST',
+                                headers: {
+                                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute(
+                                        "content")
+                                }
+                            })
+                            .then(res => res.json())
+                            .then(data => {
+                                if (data.success) {
+                                    Swal.fire('Sukses!', data.message, 'success');
+                                    $('#dataTable').DataTable().ajax.reload(null,
+                                        false); // Reload tanpa reset halaman
+                                } else {
+                                    Swal.fire('Gagal!', data.message, 'error');
+                                }
+                            });
                     }
                 });
             }

@@ -23,6 +23,11 @@
                 <i class="fa-solid fa-coins"></i>
                 <span>Gaji Saya</span></a>
         </li>
+        <li class="nav-item {{ request()->is('kode-akses*') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('kode-akses.index') }}">
+                <i class="fa-solid fa-coins"></i>
+                <span>Kode Akses</span></a>
+        </li>
     @elseif (Auth::user()->hak_akses == 'admin')
         <!-- Nav Item - Tables -->
         <li class="nav-item {{ request()->is('jabatan*') ? 'active' : '' }}">

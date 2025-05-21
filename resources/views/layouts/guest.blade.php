@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Sistem Penggajian SMK Yabujjah || Login</title>
+    <title>Login | Sistem Penggajian SMK Yabujah</title>
     <link rel="icon" href="{{ asset('libs/img/logo-smk.png') }}" type="image/x-icon" />
 
     <!-- Custom fonts for this template-->
@@ -33,7 +33,7 @@
             <!-- Logo -->
             <div class="mb-4">
                 <img src="{{ asset('libs/img/logo-smk.png') }}" alt="logo" style="max-width:20%;" class="mb-2">
-                <p class="font-weight-bold h5">Lorem ipsum dolor sit amet consectetur!</p>
+                <p class="font-weight-bold h5">Sistem Penggajian SMK Yabujah</p>
             </div>
 
             <!-- Kotak login -->

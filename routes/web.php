@@ -5,6 +5,7 @@ use App\Http\Controllers\GajiController;
 use App\Http\Controllers\GajiSayaController;
 use App\Http\Controllers\GuruController;
 use App\Http\Controllers\JabatanController;
+use App\Http\Controllers\KodeAksesController;
 use App\Http\Controllers\PotonganGajiController;
 use App\Http\Controllers\PresensiController;
 use App\Http\Controllers\ProfileController;
@@ -26,6 +27,13 @@ Route::get('/', [DashboardController::class, 'index'])->middleware(['auth', 'ver
 
 Route::post('/guru/{id}/upload-photo', [GuruController::class, 'uploadPhoto'])->name('guru.uploadPhoto');
 Route::get('/cek-presensi', [PresensiController::class, 'cekPresensi'])->name('presensi.cek');
+
+Route::post('/gaji/cek-kode', [GajiSayaController::class, 'cekKode']);
+Route::get('/kode-akses', [KodeAksesController::class, 'index'])->name('kode-akses.index');
+Route::post('/kode-akses/generate/{id}', [KodeAksesController::class, 'generate'])->name('kode-akses.generate');
+
+
+
 
 
 Route::middleware('auth')->group(function () {
