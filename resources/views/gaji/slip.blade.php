@@ -11,7 +11,7 @@
         body {
             font-family: Arial, sans-serif;
             font-size: 12px;
-            margin: 40px;
+            margin: 30px;
             color: #000000;
         }
 
@@ -195,6 +195,14 @@
             /* Jarak atas-bawah garis */
         }
 
+        .header-line-green {
+            border: 0;
+            border-top: 1.5px solid #006400;
+            /* Garis horizontal tebal */
+            margin: 2px 0;
+            /* Jarak atas-bawah garis */
+        }
+
         .sub-header-info {
             font-size: 7pt;
             text-align: center;
@@ -259,7 +267,7 @@
         </tr>
     </table>
 
-    <hr class="header-line">
+    <hr class="header-line-green">
     <div class="address-info">
         Alamat : JL.KH. Hasyim Asy'ari No. 1/1 Segeran Kidul Kec. Juntinyuat Indramayu 45282 Telp./Fax (0234) 487664
         email: smkyabujah@yahoo.co.id
