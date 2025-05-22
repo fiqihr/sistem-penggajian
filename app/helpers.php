@@ -32,7 +32,7 @@ if (!function_exists('formatBulan')) {
       setlocale(LC_TIME, 'id_ID.utf8', 'Indonesian_indonesia.1252');
 
       // Format bulan dalam bahasa Indonesia
-      return strftime('%B, %Y', $date->getTimestamp());
+      return strftime('%B %Y', $date->getTimestamp());
     } catch (\Exception $e) {
       return '-';
     }
@@ -45,6 +45,15 @@ if (!function_exists('formatTanggal')) {
   {
     Carbon::setLocale('id');
     return Carbon::parse($tanggal)->translatedFormat('j F Y');
+  }
+}
+
+if (!function_exists('formatTanggalJam')) {
+  function formatTanggalJam($tanggal)
+  {
+    Carbon::setLocale('id');
+    $carbonDate = Carbon::parse($tanggal)->setTimezone('Asia/Jakarta'); // pastikan ke WIB
+    return $carbonDate->translatedFormat('j F Y, H:i') . ' WIB';
   }
 }
 

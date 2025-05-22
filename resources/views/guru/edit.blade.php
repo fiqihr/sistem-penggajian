@@ -69,12 +69,13 @@
 
                         <div class="form-group col-md-6">
                             <label for="status">Status Guru</label>
-                            <input id="status" type="text" name="status"
-                                class="form-control @error('status') is-invalid @enderror" required
-                                placeholder="Masukkan status guru..." value="{{ $guru->status }}">
-                            @error('status')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                            <select class="form-control" name="status" id="status">
+                                <option selected disabled value="">-- Status Guru --</option>
+                                <option {{ $guru->status == 'Guru Tetap' ? 'selected' : '' }} value="Guru Tetap">Guru
+                                    Tetap</option>
+                                <option {{ $guru->status == 'Guru Tidak Tetap' ? 'selected' : '' }}
+                                    value="Guru Tidak Tetap">Guru Tidak Tetap</option>
+                            </select>
                         </div>
                     </div>
 

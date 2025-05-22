@@ -49,6 +49,7 @@
                     </div>
                 </div>
 
+
                 <!-- Earnings (Monthly) Card Example -->
                 {{-- <div class="col-xl-3 col-md-6 mb-4">
                     <div class="card border-left-info shadow h-100 py-2">
@@ -122,30 +123,60 @@
                     </div>
                 </div>
                 <div class="col-8">
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Data Guru Berdasarkan Gender</h6>
-                        </div>
-                        <div class="card-body">
-                            <h4 class="small font-weight-bold">
-                                Laki-laki ({{ $jumlahLaki }} orang)
-                                <span class="float-right">{{ $persenLaki }}%</span>
-                            </h4>
-                            <div class="progress mb-4">
-                                <div class="progress-bar bg-warning" role="progressbar"
-                                    style="width: {{ $persenLaki }}%" aria-valuenow="{{ $persenLaki }}"
-                                    aria-valuemin="0" aria-valuemax="100"></div>
+                    <div>
+                        <div class="card shadow mb-3">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-info">Presensi bulan ini
+                                    ({{ formatBulan($bulanSekarang) }})</h6>
                             </div>
-                            <h4 class="small font-weight-bold">Perempuan ({{ $jumlahPerempuan }} orang) <span
-                                    class="float-right">{{ $persenPerempuan }}%</span></h4>
-                            <div class="progress mb-4">
-                                <div class="progress-bar bg-danger" role="progressbar"
-                                    style="width: {{ $persenPerempuan }}%" aria-valuenow="{{ $persenPerempuan }}"
-                                    aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="card-body">
+                                <p class="small">
+                                    Anda sudah menginputkan presensi untuk
+                                    <strong>{{ $jumlahGuruSudahPresensi }}</strong> guru dari
+                                    total
+                                    <strong>{{ $jumlahTotalGuru }}</strong> guru di bulan
+                                    {{ formatBulan($bulanSekarang) }}.<span
+                                        class="float-right"><strong>{{ $jumlahGuruSudahPresensi }}/{{ $jumlahTotalGuru }}</strong>
+                                        guru</span>
+                                </p>
+                                <div class="progress mb-4">
+                                    <div class="progress-bar bg-info" role="progressbar"
+                                        style="width: {{ $persentasePresensi }}%;"
+                                        aria-valuenow="{{ $persentasePresensi }}" aria-valuemin="0"
+                                        aria-valuemax="100">
+                                    </div>
+                                </div>
                             </div>
-
                         </div>
                     </div>
+                    <div>
+                        <div class="card shadow">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Data Guru Berdasarkan Gender</h6>
+                            </div>
+                            <div class="card-body">
+                                <h4 class="small font-weight-bold">
+                                    Laki-laki ({{ $jumlahLaki }} orang)
+                                    <span class="float-right">{{ $persenLaki }}%</span>
+                                </h4>
+                                <div class="progress mb-4">
+                                    <div class="progress-bar bg-warning" role="progressbar"
+                                        style="width: {{ $persenLaki }}%" aria-valuenow="{{ $persenLaki }}"
+                                        aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <h4 class="small font-weight-bold">Perempuan ({{ $jumlahPerempuan }} orang) <span
+                                        class="float-right">{{ $persenPerempuan }}%</span></h4>
+                                <div class="progress mb-4">
+                                    <div class="progress-bar bg-danger" role="progressbar"
+                                        style="width: {{ $persenPerempuan }}%" aria-valuenow="{{ $persenPerempuan }}"
+                                        aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
                 </div>
 
             </div>

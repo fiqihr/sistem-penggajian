@@ -17,6 +17,11 @@ $(document).ready(function () {
                 className: "align-middle",
             },
             {
+                data: "kode_akses_expired",
+                name: "kode_akses_expired",
+                className: "align-middle",
+            },
+            {
                 data: "kode_akses",
                 name: "kode_akses",
                 className: "align-middle",

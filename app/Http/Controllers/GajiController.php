@@ -300,7 +300,7 @@ class GajiController extends Controller
 
         // kirim email
         try {
-            Mail::to($gaji->guru->user->email)->send(new KirimKodeSlipGaji($gaji->guru, $kode));
+            Mail::to($gaji->guru->user->email)->send(new KirimKodeSlipGaji($gaji->guru, $kode, $gaji->bulan));
             return response()->json(['message' => 'Slip Gaji Guru berhasil diserahkan!']);
         } catch (\Exception $e) {
             Log::error('Gagal mengirim email: ' . $e->getMessage());

@@ -24,17 +24,24 @@
         </script>
         <script src="{{ asset('libs/js/gaji_saya.js') }}"></script>
         <script>
-            function cekKode(idGaji) {
+            function cekKode(idGaji, emailGuru) {
                 Swal.fire({
-                    title: "Masukkan Kode Akses Slip Gaji",
+                    title: "Kode Akses",
                     input: "text",
-                    inputLabel: "Kode Akses",
+                    text: `Masukkan kode akses slip gaji yang sudah dikirim ke email ${emailGuru}.`,
                     inputAttributes: {
                         autocapitalize: "off"
                     },
                     showCancelButton: true,
                     confirmButtonText: "Lihat Slip",
                     showLoaderOnConfirm: true,
+                    cancelButtonText: "Batal",
+                    confirmButtonColor: "#28a745",
+                    cancelButtonColor: "#d33",
+                    customClass: {
+                        confirmButton: 'custom-swal-button',
+                        cancelButton: 'custom-swal-button'
+                    },
                     preConfirm: async (kode) => {
                         try {
                             const response = await fetch(`/gaji/cek-kode`, {
@@ -64,7 +71,10 @@
                     allowOutsideClick: () => !Swal.isLoading()
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        window.location.href = `/gaji/${result.value.id}`;
+                        window.open(`/gaji/${result.value.id}`, '_blank');
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 100);
                     }
                 });
             }

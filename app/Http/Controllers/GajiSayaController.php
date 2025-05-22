@@ -61,9 +61,9 @@ class GajiSayaController extends Controller
                         $cetakBtn = '<a disabled class="ml-2 btn btn-secondary text-white"><i class="fa-solid fa-print"></i><span class="ml-2">Cetak</span></a>';
                     } else if ($row->status == 'dikirim') {
                         // $cetakBtn = '<a href="' . route('gaji.show', $row->id_gaji) . '" onclick="window.open(this.href, \'_blank\'); location.reload(); return false;"  class="ml-2 btn btn-warning text-white"><i class="fa-solid fa-print"></i><span class="ml-2">Cetak</span></a>';
-                        $cetakBtn = '<btn onclick="cekKode(' . $row->id_gaji . ')"  class="ml-2 btn btn-warning text-white"><i class="fa-solid fa-print"></i><span class="ml-2">Cetak</span></btnhref=>';
+                        $cetakBtn = '<btn onclick="cekKode(' . $row->id_gaji . ',\'' . $row->guru->user->email . '\')"  class="ml-2 btn btn-warning text-white"><i class="fa-solid fa-print"></i><span class="ml-2">Cetak</span></btn>';
                     } else {
-                        $cetakBtn = '<btn onclick="cekKode(' . $row->id_gaji . ')" class="ml-2 btn btn-success text-white"><i class="fa-solid fa-file-circle-check"></i><span class="ml-2">Dilihat</span></btn>';
+                        $cetakBtn = '<btn onclick="cekKode(' . $row->id_gaji . ',\'' . $row->guru->user->email . '\')" class="ml-2 btn btn-success text-white"><i class="fa-solid fa-file-circle-check"></i><span class="ml-2">Dilihat</span></btn>';
                     }
 
 
@@ -138,7 +138,7 @@ class GajiSayaController extends Controller
 
         // Cek apakah status dikirim dan kode sesuai dan belum kadaluarsa
         if (
-            $gaji->status === 'dikirim' &&
+            $gaji->status !== 'belum' &&
             $gaji->kode_akses === $request->kode &&
             now()->lt($gaji->kode_akses_expired)
         ) {

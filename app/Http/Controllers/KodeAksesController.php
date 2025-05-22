@@ -23,16 +23,25 @@ class KodeAksesController extends Controller
             return DataTables::of(Gaji::query()->where('id_guru', $id_guru)->whereNot('status', 'belum')->orderBy('id_gaji', 'desc'))
                 ->addIndexColumn()
                 ->editColumn('bulan', function ($row) {
-                    return "Kode Slip Gaji bulan " . formatBulan($row->bulan);
+                    return "Kode slip gaji bulan " . formatBulan($row->bulan);
+                })
+                ->editColumn('kode_akses_expired', function ($row) {
+                    return formatTanggalJam($row->kode_akses_expired);
+                })
+                ->editColumn('kode_akses', function ($row) {
+                    $bulan = formatBulan($row->bulan);
+                    if ($row->status_kode_akses == 'disimpan')
+                        return '<button class="btn btn-light font-weight-bold" onclick="salinKode(`' . $row->kode_akses . '`)"><i class="fa-solid fa-clone mr-1"></i><span>' . $row->kode_akses . '</span></button>';
+                    else return '<button class="text-white btn btn-warning" onclick="masukkanKode(' . $row->id_gaji . ',\'' . $bulan . '\')"><i class="fa-solid fa-key"></i><span class="ml-1">Masukkan Kode</span></button>';
                 })
                 ->addColumn('action', function ($row) {
 
-                    $copyBtn = '<button class=" btn btn-primary" onclick="salinKode(`' . $row->kode_akses . '`)"><i class="fa-solid fa-clone"></i><span class="ml-1">Salin Kode</span></button>';
+                    // $copyBtn = '<button class=" btn btn-primary" onclick="salinKode(`' . $row->kode_akses . '`)"><i class="fa-solid fa-clone"></i><span class="ml-1">Salin Kode</span></button>';
                     $generateBtn = '<button class="ml-2 btn btn-danger text-white" onclick="generateKode(' . $row->id_gaji . ')"><i class="fa-solid fa-rotate"></i><span class="ml-1">Generate Ulang Kode</span></span></button>';
 
-                    return '<div class="text-center">' . $copyBtn . $generateBtn . '</div>';
+                    return '<div class="text-center">'  . $generateBtn . '</div>';
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['kode_akses', 'action'])
                 ->make(true);
         }
         return view('kode_akses.index');
@@ -47,7 +56,7 @@ class KodeAksesController extends Controller
 
         $kodeBaru = strtoupper(Str::random(6));
         $gaji->kode_akses = $kodeBaru;
-        $gaji->kode_akses_expired = now()->addMinutes(30);
+        $gaji->kode_akses_expired = now()->addHours(24);
         $gaji->save();
 
         $guru = Guru::find($gaji->id_guru);
@@ -56,10 +65,35 @@ class KodeAksesController extends Controller
         }
 
         try {
-            Mail::to($guru->user->email)->send(new KirimKodeSlipGaji($guru, $kodeBaru));
+            Mail::to($guru->user->email)->send(new KirimKodeSlipGaji($guru, $kodeBaru, $gaji->bulan));
+            $gaji->update(['status_kode_akses' => 'belum_simpan']);
             return response()->json(['success' => true, 'message' => 'Kode berhasil digenerate dan dikirim ulang ke email.']);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => 'Gagal mengirim email: ' . $e->getMessage()]);
+        }
+    }
+
+    public function simpanKode(Request $request)
+    {
+        $request->validate([
+            'id' => 'required',
+            'kode' => 'required|string',
+        ]);
+
+        $gaji = Gaji::find($request->id);
+
+        if ($gaji->kode_akses === $request->kode) {
+            $update = $gaji->update([
+                'kode_akses' => $request->kode,
+                'status_kode_akses' => 'disimpan',
+            ]);
+            if ($update) {
+                return response()->json(['message' => 'Kode berhasil disimpan.']);
+            } else {
+                return response()->json(['message' => 'Kode gagal disimpan.']);
+            }
+        } else {
+            return response()->json(['message' => 'Kode salah.']);
         }
     }
 }

@@ -26,6 +26,13 @@ body {
     background-color: #f0f0f0 !important;
 }
 
+.swal2-confirm.custom-swal-button {
+    border-radius: 50rem !important; /* !important mungkin diperlukan untuk menimpa style bawaan */
+}
+
+.swal2-cancel.custom-swal-button {
+    border-radius: 50rem !important;
+}
 
 /* #mytable-thead {
     background-color: #f8f9fa;

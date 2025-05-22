@@ -12,11 +12,13 @@ class KirimKodeSlipGaji extends Mailable
 
     public $guru;
     public $kode;
+    public $bulan;
 
-    public function __construct($guru, $kode)
+    public function __construct($guru, $kode, $bulan)
     {
         $this->guru = $guru;
         $this->kode = $kode;
+        $this->bulan = $bulan;
     }
 
     public function build()

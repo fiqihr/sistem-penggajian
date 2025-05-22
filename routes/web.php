@@ -31,6 +31,7 @@ Route::get('/cek-presensi', [PresensiController::class, 'cekPresensi'])->name('p
 Route::post('/gaji/cek-kode', [GajiSayaController::class, 'cekKode']);
 Route::get('/kode-akses', [KodeAksesController::class, 'index'])->name('kode-akses.index');
 Route::post('/kode-akses/generate/{id}', [KodeAksesController::class, 'generate'])->name('kode-akses.generate');
+Route::post('/kode-akses/simpan', [KodeAksesController::class, 'simpanKode']);
 
 
 
