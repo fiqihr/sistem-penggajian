@@ -78,7 +78,7 @@
             margin-top: 20px;
         }
 
-        <style>.table {
+        .table {
             width: 100%;
             border-collapse: collapse;
         }
@@ -184,23 +184,18 @@
         .program-list {
             font-size: 9pt;
             color: #006400;
-            /* Ukuran teks daftar program */
         }
 
         .header-line {
             border: 0;
             border-top: 1.5px solid #000000;
-            /* Garis horizontal tebal */
             margin: 2px 0;
-            /* Jarak atas-bawah garis */
         }
 
         .header-line-green {
             border: 0;
             border-top: 1.5px solid #006400;
-            /* Garis horizontal tebal */
             margin: 2px 0;
-            /* Jarak atas-bawah garis */
         }
 
         .sub-header-info {
@@ -229,7 +224,6 @@
             margin-top: 15px;
             margin-bottom: 20px;
         }
-    </style>
     </style>
 </head>
 

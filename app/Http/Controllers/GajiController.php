@@ -391,8 +391,6 @@ class GajiController extends Controller
             'sakit',
             'potongan_sakit',
             'potongan_tidak_hadir',
-            // 'potongan_bpr',
-            // 'potongan_lazisnu',
             'total_potongan',
             'total_gaji',
             'id_tunjangan',

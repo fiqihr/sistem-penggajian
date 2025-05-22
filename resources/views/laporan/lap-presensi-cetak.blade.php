@@ -11,7 +11,7 @@
         body {
             font-family: Arial, sans-serif;
             font-size: 13px;
-            margin: 40px;
+            margin: 10px 30px 30px 30px;
         }
 
         h2 {
@@ -134,20 +134,149 @@
         #data-gaji tr:hover {
             background-color: #f9f9f9;
         }
+
+        .header-container {
+            width: 100%;
+            margin-bottom: 5px;
+            /* Jarak setelah kop surat */
+            border-collapse: collapse;
+            /* Penting untuk tabel di DomPDF */
+        }
+
+        .logo-cell {
+            width: 18%;
+            /* Perkiraan lebar kolom logo, sesuaikan jika perlu */
+            vertical-align: top;
+            text-align: center;
+            padding-right: 10px;
+        }
+
+        .logo-cell img {
+            width: 120px;
+            /* Sesuaikan ukuran logo Anda */
+            height: auto;
+        }
+
+        .info-cell {
+            width: 82%;
+            vertical-align: top;
+            text-align: center;
+            line-height: 1.2;
+            /* Kerapatan baris */
+        }
+
+        .info-cell p,
+        .info-cell h1,
+        .info-cell h2,
+        .info-cell h3 {
+            margin: 1px 0;
+            /* Margin vertikal minimal antar teks */
+            padding: 0;
+            text-transform: uppercase;
+            /* Semua teks kapital seperti di gambar */
+        }
+
+        .lp-maarif,
+        .yayasan-text {
+            font-size: 10.5pt;
+            color: #006400;
+            font-weight: bold;
+        }
+
+        .school-name {
+            font-size: 22pt;
+            /* Ukuran nama sekolah paling besar */
+            font-weight: bold;
+            color: #006400;
+            /* Warna hijau tua, sesuaikan dengan warna di logo Anda */
+            margin-top: 3px;
+            margin-bottom: 10px;
+        }
+
+        .program-title {
+            font-size: 9.5pt;
+            font-weight: bold;
+            color: #B22222;
+            /* Warna merah (firebrick), sesuaikan */
+            /* margin-top: 0px; */
+        }
+
+        .program-list {
+            font-size: 9pt;
+            color: #006400;
+        }
+
+        .header-line {
+            border: 0;
+            border-top: 1.5px solid #000000;
+            margin: 2px 0;
+        }
+
+        .header-line-green {
+            border: 0;
+            border-top: 1.5px solid #006400;
+            margin: 2px 0;
+        }
+
+        .sub-header-info {
+            font-size: 7pt;
+            text-align: center;
+            margin: 4px 0;
+            color: #006400;
+            font-weight: bold;
+        }
+
+        .address-info {
+            font-size: 7pt;
+            text-align: center;
+            margin: 4px 0;
+        }
+
+        /* Hapus atau sesuaikan kelas .w-100 dan .w-50 jika tidak digunakan di bagian lain */
+        /* .w-100 { width: 100% !important; } */
+        /* .w-50 { width: 50% !important; } */
+
+        /* Jika Anda masih membutuhkan judul "SLIP GAJI" */
+        .document-title {
+            text-align: center;
+            font-size: 16pt;
+            font-weight: bold;
+            margin-top: 15px;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 
 <body>
-    <table class="table w-100">
+    <table class="header-container">
         <tr>
-            <td class="" style="width:75%;">
-                <h2>LAPORAN PRESENSI GURU SMK YABUJJAH</h2>
+            <td class="logo-cell">
+                {{-- Pastikan path ke logo ini benar dan gambar tersedia --}}
+                <img src="{{ public_path('libs/img/logo-smk.png') }}" alt="Logo Sekolah">
             </td>
-            <td class="" style="width:25%;">
-                <img src="{{ public_path('libs/img/logo-smk.png') }}" alt="" style="width: 50%; float: right;">
+            <td class="info-cell">
+                <p class="lp-maarif">LEMBAGA PENDIDIKAN MA'ARIF NU</p>
+                <p class="yayasan-text">SEKOLAH MENENGAH KEJURUAN YAYASAN IBU HJ. CHODIJAH</p>
+                <h1 class="school-name">SMK YABUJAH SEGERAN</h1>
+                <h3 class="program-title">PROGRAM KEAHLIAN :</h3>
+                <p class="program-list">TEKNIK OTOMOTIF, TEKNIK JARINGAN KOMPUTER & TELEKOMUNIKASI</p>
+                <p class="program-list">LAYANAN KESEHATAN, TEKNOLOGI FARMASI</p>
+                <div class="sub-header-info">
+                    NSS/NPSN :32 2 02 18 110 03 / 20255767 <span style="margin: 0 5px;">|</span> IJIN OPERASIONAL : No.
+                    421.5 /
+                    Kep. 118 - Disdik / 2009
+                </div>
             </td>
         </tr>
     </table>
+
+    <hr class="header-line-green">
+    <div class="address-info">
+        Alamat : JL.KH. Hasyim Asy'ari No. 1/1 Segeran Kidul Kec. Juntinyuat Indramayu 45282 Telp./Fax (0234) 487664
+        email: smkyabujah@yahoo.co.id
+    </div>
+    <hr class="header-line">
+    <h2 class="document-title">LAPORAN PRESENSI SMK YABUJAH</h2>
     <hr style="margin-bottom: 20px; margin-top:20px;">
     <table class="table w-50" style="margin-bottom:20px;">
         <tr>
