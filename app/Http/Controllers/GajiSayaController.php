@@ -4,10 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\Gaji;
 use App\Models\Guru;
+use App\Models\PotonganGaji;
+use App\Models\Presensi;
+use App\Models\Tunjangan;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 class GajiSayaController extends Controller
 {
@@ -94,9 +100,85 @@ class GajiSayaController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $encryptedId)
     {
-        //
+        try {
+            $id = Crypt::decryptString($encryptedId);
+        } catch (DecryptException $e) {
+            abort(404, 'Data gaji tidak ditemukan atau tautan tidak valid.');
+        }
+
+        $gaji = Gaji::with('guru', 'jabatan')->where('id_gaji', $id)->first();
+
+        $bulan_presensi = $gaji->bulan;
+        $id_guru = $gaji->id_guru;
+        $id_tunjangan = $gaji->id_tunjangan;
+        $presensi = Presensi::where('bulan', $bulan_presensi)->where('id_guru', $id_guru)->first();
+
+        $gaji_pokok = Guru::where('id_guru', $id_guru)->first()->jabatan->gaji_pokok;
+
+        if (!$id_tunjangan == null) {
+            $jml_tunjangan = Tunjangan::where('id_tunjangan', $id_tunjangan)->first()->jml_tunjangan;
+            $nama_tunjangan = Tunjangan::where('id_tunjangan', $id_tunjangan)->first()->nama_tunjangan;
+        } else {
+            $jml_tunjangan = 0;
+            $nama_tunjangan = "-";
+        }
+
+        $total_bruto = $gaji_pokok + $jml_tunjangan;
+
+
+        $sakit = $presensi->sakit ?? 0;
+        $tidak_hadir = $presensi->tidak_hadir ?? 0;
+
+        $potongan_sakit = PotonganGaji::where('nama_potongan', 'Sakit')->first()->jml_potongan;
+        $potongan_tidak_hadir = PotonganGaji::where('nama_potongan', 'Tidak Hadir')->first()->jml_potongan;
+        // $potongan_bpr = PotonganGaji::where('nama_potongan', 'BPR')->first()->jml_potongan;
+        // $potongan_lazisnu = PotonganGaji::where('nama_potongan', 'Lazisnu')->first()->jml_potongan;
+
+        $semua_jenis_potongan = PotonganGaji::where('nama_potongan', 'not like', '%sakit%')->where('nama_potongan', 'not like', '%tidak hadir%')->get();
+        $cek_jml_potongan = [];
+        foreach ($semua_jenis_potongan as $potongan) {
+            $cek_jml_potongan[] = $potongan->jml_potongan;
+        }
+        $foreach_potongan_lain = array_sum($cek_jml_potongan);
+
+        $total_potongan_tidak_hadir = $potongan_tidak_hadir * $tidak_hadir;
+        $total_potongan_sakit = $potongan_sakit * $sakit;
+
+        $potongan_sakit_dan_tidak_hadir = $total_potongan_tidak_hadir + $total_potongan_sakit;
+        $total_potongan = $potongan_sakit_dan_tidak_hadir + $foreach_potongan_lain;
+
+
+        if (Auth::user()->hak_akses == 'guru') {
+            Gaji::where('id_gaji', $id)->update(['status' => 'diterima']);
+        }
+
+        // dd($alpha, $sakit, $jmlPotonganAlpha, $jmlPotonganSakit);
+        $bulan_gaji = $gaji->bulan;
+        $nama_guru = $gaji->guru->user->name;
+
+        $pdf = Pdf::loadView('gaji.slip', [
+            'gaji' => $gaji,
+            'tidak_hadir' => $tidak_hadir,
+            'sakit' => $sakit,
+            'potongan_tidak_hadir' => $potongan_tidak_hadir,
+            'potongan_sakit' => $potongan_sakit,
+            // 'potongan_bpr' => $potongan_bpr,
+            // 'potongan_lazisnu' => $potongan_lazisnu,
+            'tidak_hadir' => $tidak_hadir,
+            'sakit' => $sakit,
+            'jml_tunjangan' => $jml_tunjangan,
+            'nama_tunjangan' => $nama_tunjangan,
+            'total_bruto' => $total_bruto,
+            'potongan_sakit_dan_tidak_hadir' => $potongan_sakit_dan_tidak_hadir,
+            'total_potongan' => $total_potongan,
+            'semua_jenis_potongan' => $semua_jenis_potongan,
+        ])->setPaper('A4', 'portrait');
+
+        $file_name = 'Slip Gaji - ' . formatBulan($bulan_gaji) . ' - ' . $nama_guru . '.pdf';
+        return $pdf->stream($file_name);
+        // return view('gaji.slip', compact('gaji', 'alpha', 'sakit', 'jmlPotonganAlpha', 'jmlPotonganSakit'));
     }
 
     /**
@@ -142,9 +224,11 @@ class GajiSayaController extends Controller
             $gaji->kode_akses === $request->kode &&
             now()->lt($gaji->kode_akses_expired)
         ) {
+            $encryptedIdGaji = Crypt::encryptString($gaji->id_gaji);
             return response()->json([
+                'success' => true,
                 'message' => 'Kode valid!',
-                'id' => $gaji->id_gaji, // untuk diarahkan ke /gaji/{id}
+                'encrypted_id' => $encryptedIdGaji,
             ]);
         } else {
             return response()->json([

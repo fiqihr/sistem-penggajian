@@ -63,6 +63,10 @@
                                 throw new Error(data.message || "Kode salah");
                             }
 
+                            if (!data.encrypted_id) {
+                                throw new Error("ID terenkripsi tidak diterima dari server.");
+                            }
+
                             return data;
                         } catch (error) {
                             Swal.showValidationMessage(`Gagal: ${error.message}`);
@@ -70,8 +74,9 @@
                     },
                     allowOutsideClick: () => !Swal.isLoading()
                 }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.open(`/gaji/${result.value.id}`, '_blank');
+                    if (result.isConfirmed && result.value && result.value.success) {
+                        const encryptedIdToShow = result.value.encrypted_id;
+                        window.open(`/gaji-saya/${encryptedIdToShow}`, '_blank');
                         setTimeout(() => {
                             window.location.reload();
                         }, 100);
