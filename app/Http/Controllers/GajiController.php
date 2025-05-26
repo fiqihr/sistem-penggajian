@@ -172,6 +172,10 @@ class GajiController extends Controller
             'total_potongan' => $total_potongan,
             'semua_jenis_potongan' => $semua_jenis_potongan,
         ])->setPaper('A4', 'portrait');
+        $timestamp = date('YmdHis', strtotime($gaji->created_at));
+
+        $file_name = 'Slip Gaji - ' . formatBulan($bulan_gaji) . ' - ' . $nama_guru . ' - ' . $timestamp . '.pdf';
+        return $pdf->stream($file_name);
     }
 
     /**
