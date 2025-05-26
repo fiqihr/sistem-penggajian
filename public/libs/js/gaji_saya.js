@@ -3,6 +3,7 @@ $(document).ready(function () {
         processing: true,
         serverSide: true,
         ajax: gajiSayaRoute, // gajiSayaRoute sudah didefinisikan di Blade
+        order: [[1, "desc"]],
         columns: [
             {
                 data: "DT_RowIndex",
@@ -12,10 +13,17 @@ $(document).ready(function () {
                 className: "align-middle text-center",
             },
             {
-                data: "bulan",
+                data: "id_gaji",
+                name: "id_gaji",
+                visible: false,
+            },
+            {
+                data: "bulan_format",
                 name: "bulan",
                 className: "align-middle",
+                searchable: true, // <- tambahkan ini
             },
+
             {
                 data: "total_gaji",
                 name: "total_gaji",

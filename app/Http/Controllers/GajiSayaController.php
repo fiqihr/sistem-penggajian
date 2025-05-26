@@ -14,20 +14,76 @@ use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Support\Str;
 
 class GajiSayaController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+
+
     public function index(Request $request)
     {
-        App::setLocale('id');
         $id_user = Auth::user()->id;
         $id_guru = Guru::where('id_user', $id_user)->value('id_guru');
+
         if ($request->ajax()) {
-            return DataTables::of(Gaji::query()->where('id_guru', $id_guru)->whereNot('status', 'belum')->orderBy('id_gaji', 'desc'))
+            $query = Gaji::query()->where('id_guru', $id_guru)->whereNot('status', 'belum');
+
+            // 🔍 Pencarian global termasuk nama bulan
+            if ($request->has('search') && !empty($request->search['value'])) {
+                $searchValue = strtolower($request->search['value']);
+
+                $bulanMap = [
+                    'januari' => '01',
+                    'februari' => '02',
+                    'maret' => '03',
+                    'april' => '04',
+                    'mei' => '05',
+                    'juni' => '06',
+                    'juli' => '07',
+                    'agustus' => '08',
+                    'september' => '09',
+                    'oktober' => '10',
+                    'november' => '11',
+                    'desember' => '12',
+                ];
+
+                $bulanDitemukan = false;
+
+                foreach ($bulanMap as $nama => $angka) {
+                    if (Str::contains($searchValue, $nama)) {
+                        // Ambil tahun jika ada angka (misal: "juni 2025")
+                        $tahun = preg_replace('/[^0-9]/', '', $searchValue);
+
+                        if (!empty($tahun)) {
+                            $pattern = "$tahun-$angka";
+                        } else {
+                            $pattern = "-$angka";
+                        }
+
+                        $query->where('bulan', 'like', "%$pattern%");
+                        $bulanDitemukan = true;
+                        break;
+                    }
+                }
+
+                // Jika tidak ditemukan nama bulan, lanjut pencarian umum
+                if (!$bulanDitemukan) {
+                    $query->where(function ($q) use ($searchValue) {
+                        $q->where('bulan', 'like', "%$searchValue%")
+                            ->orWhere('total_gaji', 'like', "%$searchValue%")
+                            ->orWhere('status', 'like', "%$searchValue%");
+                    });
+                }
+            }
+
+            return DataTables::of($query)
                 ->addIndexColumn()
+                ->addColumn('bulan_format', function ($row) {
+                    return formatBulan($row->bulan);
+                })
                 ->editColumn('bulan', function ($row) {
                     return formatBulan($row->bulan);
                 })
@@ -35,21 +91,52 @@ class GajiSayaController extends Controller
                     return formatRupiah($row->total_gaji);
                 })
                 ->addColumn('action', function ($row) {
-                    $editBtn = '<a href="#" class="ml-2 btn btn-warning text-white"><i class="fa-solid fa-pen-nib"></i><span class="ml-2">Edit</span></a>';
-                    if ($row->status == 'belum') {
-                        $cetakBtn = '<a disabled class="ml-2 btn btn-secondary text-white"><i class="fa-solid fa-print"></i><span class="ml-2">Cetak</span></a>';
-                    } else if ($row->status == 'dikirim') {
-                        $cetakBtn = '<btn onclick="cekKode(' . $row->id_gaji . ',\'' . $row->guru->user->email . '\')"  class="ml-2 btn btn-warning text-white"><i class="fa-solid fa-print"></i><span class="ml-2">Cetak</span></btn>';
-                    } else {
-                        $cetakBtn = '<btn onclick="cekKode(' . $row->id_gaji . ',\'' . $row->guru->user->email . '\')" class="ml-2 btn btn-success text-white"><i class="fa-solid fa-file-circle-check"></i><span class="ml-2">Dilihat</span></btn>';
+                    // tombol aksi
+                })
+                ->filter(function ($query) use ($request) {
+                    if ($request->has('search') && !empty($request->search['value'])) {
+                        $searchValue = strtolower($request->search['value']);
+
+                        $bulanMap = [
+                            'januari' => '01',
+                            'februari' => '02',
+                            'maret' => '03',
+                            'april' => '04',
+                            'mei' => '05',
+                            'juni' => '06',
+                            'juli' => '07',
+                            'agustus' => '08',
+                            'september' => '09',
+                            'oktober' => '10',
+                            'november' => '11',
+                            'desember' => '12',
+                        ];
+
+                        foreach ($bulanMap as $nama => $angka) {
+                            if (Str::contains($searchValue, $nama)) {
+                                $tahun = preg_replace('/[^0-9]/', '', $searchValue);
+                                $pattern = !empty($tahun) ? "$tahun-$angka" : "-$angka";
+                                $query->where('bulan', 'like', "%$pattern%");
+                                return;
+                            }
+                        }
+
+                        $query->where(function ($q) use ($searchValue) {
+                            $q->where('bulan', 'like', "%$searchValue%")
+                                ->orWhere('total_gaji', 'like', "%$searchValue%")
+                                ->orWhere('status', 'like', "%$searchValue%");
+                        });
                     }
-                    return '<div class="text-center">' . $cetakBtn . '</div>';
                 })
                 ->rawColumns(['action'])
                 ->make(true);
         }
+
         return view('gaji_saya.index');
     }
+
+
+
 
     /**
      * Show the form for creating a new resource.

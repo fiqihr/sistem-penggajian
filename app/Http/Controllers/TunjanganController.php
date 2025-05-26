@@ -15,7 +15,7 @@ class TunjanganController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            return DataTables::of(Tunjangan::query()->orderBy('id_tunjangan', 'asc'))
+            return DataTables::of(Tunjangan::query())
                 ->addIndexColumn()
                 ->editColumn('bulan', function ($row) {
                     return formatBulan($row->bulan);
