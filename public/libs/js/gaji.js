@@ -151,18 +151,45 @@ function kirimGaji(id) {
     });
 }
 
-// function kirimGaji(id) {
-//     Swal.fire({
-//         text: "Apakah Anda yakin akan mengirim slip gaji?",
-//         icon: "warning",
-//         showCancelButton: true,
-//         confirmButtonColor: "#d33",
-//         cancelButtonColor: "#3B82F6",
-//         confirmButtonText: "Kirim",
-//         cancelButtonText: "Batal",
-//     }).then((result) => {
-//         if (result.isConfirmed) {
-//             document.getElementById("kirim-form-" + id).submit();
-//         }
-//     });
-// }
+let bulanTersedia = [];
+
+$("#id_guru").on("change", function () {
+    const id_guru = $(this).val();
+    $("#bulan").val("").prop("disabled", true);
+    $("#bulan-error").addClass("hidden");
+    $("#bulan").removeClass("border-red-500");
+
+    if (id_guru) {
+        $.ajax({
+            url: presensiCek,
+            method: "GET",
+            data: {
+                id_guru,
+            },
+            success: function (response) {
+                if (response.status === "success") {
+                    bulanTersedia = response.bulans;
+                    $("#bulan").prop("disabled", false);
+                }
+            },
+        });
+    }
+});
+
+$("#bulan").on("change", function () {
+    const selected = $(this).val(); // format: 2025-05
+
+    if (!bulanTersedia.includes(selected)) {
+        // Tampilkan pesan error & beri warna merah
+        $("#bulan-error")
+            .text("Presensi Guru belum diisi pada bulan ini.")
+            .show();
+        $("#bulan").addClass("is-invalid"); // Bootstrap: border merah
+        $("#btn-submit").prop("disabled", true);
+    } else {
+        // Sembunyikan pesan error & hapus warna merah
+        $("#bulan-error").hide().text("");
+        $("#bulan").removeClass("is-invalid");
+        $("#btn-submit").prop("disabled", false);
+    }
+});

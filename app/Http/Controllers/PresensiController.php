@@ -6,7 +6,6 @@ use App\Models\Guru;
 use App\Models\Presensi;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
-use Illuminate\Support\Facades\DB; // Tambahkan ini kalau belum ada
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class PresensiController extends Controller
@@ -19,15 +18,12 @@ class PresensiController extends Controller
     {
         if ($request->ajax()) {
             $query = Presensi::with('guru')->orderBy('id_presensi', 'desc');
-
             if ($request->filled('bulan')) {
                 $query->whereRaw('SUBSTRING(TRIM(bulan), 6, 2) = ?', [$request->bulan]);
             }
-
             if ($request->filled('tahun')) {
                 $query->whereRaw('SUBSTRING(TRIM(bulan), 1, 4) = ?', [$request->tahun]);
             }
-
             return DataTables::of($query)
                 ->addIndexColumn()
                 ->editColumn('bulan', function ($row) {
@@ -45,60 +41,20 @@ class PresensiController extends Controller
                         <i class="fa-solid fa-trash"></i><span class="ml-2">Hapus</span>
                     </button>
                 </form>';
-
                     return '<div class="text-center">' . $editBtn . $deleteBtn . '</div>';
                 })
                 ->rawColumns(['action'])
                 ->make(true);
         }
-
         // Ambil daftar bulan dan tahun unik dari tabel presensi
         $list_bulan = Presensi::selectRaw('DISTINCT(SUBSTRING(bulan, 6, 2)) as bulan')
             ->orderBy('bulan')
             ->pluck('bulan');
-
         $list_tahun = Presensi::selectRaw('DISTINCT(SUBSTRING(bulan, 1, 4)) as tahun')
             ->orderBy('tahun')
             ->pluck('tahun');
-
         return view('presensi.index', compact('list_bulan', 'list_tahun'));
     }
-
-    // public function index(Request $request)
-    // {
-    //     if ($request->ajax()) {
-    //         $query = Presensi::with('guru')->orderBy('id_presensi', 'desc');
-
-    //         if ($request->filled('bulan')) {
-    //             $query->where('bulan', $request->bulan);
-    //         }
-
-    //         return DataTables::of($query)
-    //             ->addIndexColumn()
-    //             ->editColumn('bulan', function ($row) {
-    //                 return formatBulan($row->bulan);
-    //             })
-    //             ->editColumn('nama_guru', function ($row) {
-    //                 return $row->guru ? $row->guru->user->name : '-';
-    //             })
-    //             ->addColumn('action', function ($row) {
-    //                 $editBtn = '<a href="' . route('presensi.edit', $row->id_presensi) . '" class="btn btn-warning text-white ml-2"><i class="fa-solid fa-pen-nib"></i><span class="ml-2 small">Edit</span></a>';
-    //                 $deleteBtn = '<form id="delete-form-' . $row->id_presensi . '" action="' . route('presensi.destroy', $row->id_presensi) . '" method="POST" style="display:inline;">
-    //                 ' . csrf_field() . '
-    //                 ' . method_field('DELETE') . '
-    //                 <button type="button" onclick="deleteJabatan(' . $row->id_presensi . ')" class="btn btn-danger ml-2">
-    //                     <i class="fa-solid fa-trash"></i><span class="ml-2 small">Hapus</span>
-    //                 </button>
-    //             </form>';
-
-    //                 return '<div class="text-center">' . $editBtn . $deleteBtn . '</div>';
-    //             })
-    //             ->rawColumns(['action'])
-    //             ->make(true);
-    //     }
-    //     return view('presensi.index');
-    // }
-
 
     /**
      * Show the form for creating a new resource.
@@ -226,8 +182,6 @@ class PresensiController extends Controller
             ->where('bulan', $bulan)
             ->first();
 
-
-
         if ($presensi) {
             return response()->json([
                 'status' => 'success',
@@ -247,9 +201,8 @@ class PresensiController extends Controller
     public function cekPresensi(Request $request)
     {
         $id_guru = $request->id_guru;
-
         $bulans = Presensi::where('id_guru', $id_guru)
-            ->pluck('bulan'); // format: 2025-05
+            ->pluck('bulan');
 
         return response()->json([
             'status' => 'success',

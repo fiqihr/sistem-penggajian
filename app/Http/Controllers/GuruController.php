@@ -40,8 +40,6 @@ class GuruController extends Controller
                                 <i class="fa-solid fa-trash"></i><span class="ml-2 ">Hapus</span>
                             </button>
                         </form>';
-
-
                     return '<div class="text-center">' . $showBtn . $editBtn . $deleteBtn . '</div>';
                 })
                 ->rawColumns(['action'])
@@ -64,7 +62,6 @@ class GuruController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
         $request->validate([
             'name' => 'required',
             'nig' => 'required',
@@ -185,19 +182,13 @@ class GuruController extends Controller
 
         if ($request->hasFile('photo')) {
             $file = $request->file('photo');
-
-            // Generate nama file hash
             $hashedName = Str::random(10) . '.' . $file->getClientOriginalExtension();
-
             // Simpan ke disk 'public' -> storage/app/public/images/
             Storage::disk('public')->putFileAs('images', $file, $hashedName);
-
             // Hapus foto lama jika ada
             if ($guru->photo && Storage::disk('public')->exists('images/' . $guru->photo)) {
                 Storage::disk('public')->delete('images/' . $guru->photo);
             }
-
-            // Simpan nama file ke database
             $guru->photo = $hashedName;
             $guru->save();
 

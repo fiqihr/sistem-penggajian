@@ -55,16 +55,6 @@
                             <td>{{ formatRupiah($potongan->jml_potongan) }}</td>
                         </tr>
                     @endforeach
-                    {{-- <tr>
-                        <td>BPR</td>
-                        <td>:</td>
-                        <td>{{ formatRupiah($potongan_bpr) }}</td>
-                    </tr>
-                    <tr>
-                        <td>Lazisnu</td>
-                        <td>:</td>
-                        <td>{{ formatRupiah($potongan_lazisnu) }}</td>
-                    </tr> --}}
                     <tr>
                         <td>Total Potongan</td>
                         <td>:</td>
@@ -85,5 +75,4 @@
             </div>
         </form>
     </div>
-
 </x-layout>

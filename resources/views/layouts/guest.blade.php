@@ -43,10 +43,6 @@
         </div>
     </div>
 
-
-
-
-
     <!-- Bootstrap core JavaScript-->
     <script src="{{ asset('libs/bootstrap/vendor/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('libs/bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>

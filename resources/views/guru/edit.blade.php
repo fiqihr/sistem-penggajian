@@ -17,12 +17,6 @@
                             class="rounded-lg shadow mx-auto"
                             style="width: auto; height: auto%; max-width: 300px; object-fit: cover;">
                     @endif
-
-                    {{-- <img src="{{ asset('storage/images/' . $guru->photo) }}" alt="Profile"
-                        class="rounded-lg shadow mx-auto"
-                        style="width: auto; height: auto%; max-width: 300px; object-fit: cover;"> --}}
-
-
                     <div class="text-center mx-auto mt-2">
                         <btn class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal">
                             <i class="fa-solid fa-camera-rotate"></i> <span>Update Foto</span>
@@ -165,12 +159,10 @@
                                 showConfirmButton: false
                             });
 
-                            // Ganti src dari elemen <img> agar langsung tampil foto baru
                             const img = document.querySelector('img[alt="Profile"]');
                             img.src =
-                                `/storage/images/${data.photo}?t=${new Date().getTime()}`; // tambahkan timestamp agar tidak cache
+                                `/storage/images/${data.photo}?t=${new Date().getTime()}`;
 
-                            // Tutup modal
                             $('#exampleModal').modal('hide');
                         } else {
                             alert('Gagal memperbarui foto.');

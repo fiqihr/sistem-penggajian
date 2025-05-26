@@ -118,14 +118,11 @@
         .header-container {
             width: 100%;
             margin-bottom: 5px;
-            /* Jarak setelah kop surat */
             border-collapse: collapse;
-            /* Penting untuk tabel di DomPDF */
         }
 
         .logo-cell {
             width: 18%;
-            /* Perkiraan lebar kolom logo, sesuaikan jika perlu */
             vertical-align: top;
             text-align: center;
             padding-right: 10px;
@@ -133,7 +130,6 @@
 
         .logo-cell img {
             width: 120px;
-            /* Sesuaikan ukuran logo Anda */
             height: auto;
         }
 
@@ -142,7 +138,6 @@
             vertical-align: top;
             text-align: center;
             line-height: 1.2;
-            /* Kerapatan baris */
         }
 
         .info-cell p,
@@ -150,10 +145,8 @@
         .info-cell h2,
         .info-cell h3 {
             margin: 1px 0;
-            /* Margin vertikal minimal antar teks */
             padding: 0;
             text-transform: uppercase;
-            /* Semua teks kapital seperti di gambar */
         }
 
         .lp-maarif,
@@ -165,10 +158,8 @@
 
         .school-name {
             font-size: 22pt;
-            /* Ukuran nama sekolah paling besar */
             font-weight: bold;
             color: #006400;
-            /* Warna hijau tua, sesuaikan dengan warna di logo Anda */
             margin-top: 3px;
             margin-bottom: 10px;
         }
@@ -177,8 +168,6 @@
             font-size: 9.5pt;
             font-weight: bold;
             color: #B22222;
-            /* Warna merah (firebrick), sesuaikan */
-            /* margin-top: 0px; */
         }
 
         .program-list {
@@ -212,11 +201,6 @@
             margin: 4px 0;
         }
 
-        /* Hapus atau sesuaikan kelas .w-100 dan .w-50 jika tidak digunakan di bagian lain */
-        /* .w-100 { width: 100% !important; } */
-        /* .w-50 { width: 50% !important; } */
-
-        /* Jika Anda masih membutuhkan judul "SLIP GAJI" */
         .document-title {
             text-align: center;
             font-size: 16pt;
@@ -228,21 +212,9 @@
 </head>
 
 <body>
-    {{-- <table class="table w-100">
-        <tr>
-            <td class="w-50">
-                <h2>SLIP GAJI SMK YABUJJAH</h2>
-            </td>
-            <td class="w-50">
-                <img src="{{ public_path('libs/img/logo-smk.png') }}" alt="" style="width: 25%; float: right;">
-            </td>
-        </tr>
-    </table> --}}
-
     <table class="header-container">
         <tr>
             <td class="logo-cell">
-                {{-- Pastikan path ke logo ini benar dan gambar tersedia --}}
                 <img src="{{ public_path('libs/img/logo-smk.png') }}" alt="Logo Sekolah">
             </td>
             <td class="info-cell">
@@ -267,11 +239,7 @@
         email: smkyabujah@yahoo.co.id
     </div>
     <hr class="header-line">
-
-    {{-- Jika ini adalah slip gaji, judulnya bisa diletakkan di sini --}}
     <h2 class="document-title">SLIP GAJI</h2>
-
-    {{-- <hr style="margin-bottom: 20px; margin-top:20px;"> --}}
     <table class="table w-50">
         <tr>
             <td>Periode</td>
@@ -330,19 +298,6 @@
                 <td class="value">{{ formatRupiah($potongan->jml_potongan) }}</td>
             </tr>
         @endforeach
-        {{-- <tr>
-            <td>
-                - BPR
-            </td>
-            <td class="value">{{ formatRupiah($potongan_bpr) }}</td>
-        </tr>
-        <tr>
-            <td>
-                - Lazisnu <br>
-            </td>
-            <td class="value">{{ formatRupiah($potongan_lazisnu) }}</td>
-        </tr> --}}
-
         <tr class="bold">
             <td class="label">Total Potongan</td>
             <td class="value">{{ formatRupiah($total_potongan) }}</td>

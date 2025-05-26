@@ -19,13 +19,10 @@ class CheckAccess
         if (!Auth::check()) {
             return redirect()->route('login');
         }
-
         $user = Auth::user();
-
         if (!in_array($user->hak_akses, $roles)) {
             return redirect()->route('dashboard');
         }
-
         return $next($request);
     }
 }

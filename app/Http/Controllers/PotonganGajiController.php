@@ -20,7 +20,6 @@ class PotonganGajiController extends Controller
                     return formatRupiah($row->jml_potongan);
                 })
                 ->addColumn('action', function ($row) {
-                    $showBtn = '<a href="' . route('potongan-gaji.show', $row->id_potongan_gaji) . '" class="btn btn-primary btn-user text-white"><i class="fa-solid fa-eye"></i><span class="ml-2">Detail</span></a>';
                     $editBtn = '<a href="' . route('potongan-gaji.edit', $row->id_potongan_gaji) . '" class="ml-2 btn btn-warning text-white"><i class="fa-solid fa-pen-nib"></i><span class="ml-2">Edit</span></a>';
                     $deleteBtn = '<form id="delete-form-' . $row->id_potongan_gaji . '" action="' . route('potongan-gaji.destroy', $row->id_potongan_gaji) . '" method="POST" style="display:inline;">
                         ' . csrf_field() . '
@@ -29,8 +28,6 @@ class PotonganGajiController extends Controller
                             <i class="fa-solid fa-trash"></i><span class="ml-2 ">Hapus</span>
                         </button>
                     </form>';
-
-
                     return '<div class="text-center">' . $editBtn . $deleteBtn . '</div>';
                 })
                 ->rawColumns(['action'])

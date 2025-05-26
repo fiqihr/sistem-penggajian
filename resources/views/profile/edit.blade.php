@@ -1,107 +1,3 @@
-{{-- <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Profile') }}
-        </h2>
-    </x-slot>
-
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.update-profile-information-form')
-                </div>
-            </div>
-
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.update-password-form')
-                </div>
-            </div>
-
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.delete-user-form')
-                </div>
-            </div>
-        </div>
-    </div>
-</x-app-layout> --}}
-{{-- <form action="">
-                    <section class="mb-5">
-                        <header class="mb-4">
-                            <h2 class="h5 text-dark">
-                                {{ __('Update Password') }}
-                            </h2>
-                            <p class="text-muted small">
-                                {{ __('Ensure your account is using a long, random password to stay secure.') }}
-                            </p>
-                        </header>
-
-                        <form method="post" action="{{ route('password.update') }}">
-                            @csrf
-                            @method('put')
-
-                            <div class="mb-3">
-                                <label for="update_password_current_password" class="form-label">
-                                    {{ __('Current Password') }}
-                                </label>
-                                <input id="update_password_current_password" name="current_password" type="password"
-                                    class="form-control" autocomplete="current-password">
-                                @if ($errors->updatePassword->has('current_password'))
-                                    <div class="text-danger small mt-1">
-                                        {{ $errors->updatePassword->first('current_password') }}
-                                    </div>
-                                @endif
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="update_password_password" class="form-label">
-                                    {{ __('New Password') }}
-                                </label>
-                                <input id="update_password_password" name="password" type="password"
-                                    class="form-control" autocomplete="new-password">
-                                @if ($errors->updatePassword->has('password'))
-                                    <div class="text-danger small mt-1">
-                                        {{ $errors->updatePassword->first('password') }}
-                                    </div>
-                                @endif
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="update_password_password_confirmation" class="form-label">
-                                    {{ __('Confirm Password') }}
-                                </label>
-                                <input id="update_password_password_confirmation" name="password_confirmation"
-                                    type="password" class="form-control" autocomplete="new-password">
-                                @if ($errors->updatePassword->has('password_confirmation'))
-                                    <div class="text-danger small mt-1">
-                                        {{ $errors->updatePassword->first('password_confirmation') }}
-                                    </div>
-                                @endif
-                            </div>
-
-                            <div class="d-flex align-items-center gap-3">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Save') }}
-                                </button>
-
-                                @if (session('status') === 'password-updated')
-                                    <p class="text-success small mb-0" id="saved-message">
-                                        {{ __('Saved.') }}
-                                    </p>
-                                    <script>
-                                        setTimeout(() => {
-                                            const msg = document.getElementById('saved-message');
-                                            if (msg) msg.style.display = 'none';
-                                        }, 2000);
-                                    </script>
-                                @endif
-                            </div>
-                        </form>
-                    </section>
-
-                </form> --}}
 <x-layout>
     <div class="mt-5 mb-4">
         <h3 class="">Profile</h3>
@@ -229,7 +125,6 @@
                 </div>
             </div>
         </div>
-        {{-- <button onclick="guruBerhasil('halo')">cek</button> --}}
     </div>
     @push('scripts')
         <script>
@@ -272,12 +167,10 @@
                                 showConfirmButton: false
                             });
 
-                            // Ganti src dari elemen <img> agar langsung tampil foto baru
                             const img = document.querySelector('img[alt="Profile"]');
                             img.src =
-                                `/storage/images/${data.photo}?t=${new Date().getTime()}`; // tambahkan timestamp agar tidak cache
+                                `/storage/images/${data.photo}?t=${new Date().getTime()}`;
 
-                            // Tutup modal
                             $('#exampleModal').modal('hide');
                         } else {
                             alert('Gagal memperbarui foto.');

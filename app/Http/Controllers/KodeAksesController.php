@@ -35,10 +35,7 @@ class KodeAksesController extends Controller
                     else return '<button class="text-white btn btn-warning" onclick="masukkanKode(' . $row->id_gaji . ',\'' . $bulan . '\')"><i class="fa-solid fa-key"></i><span class="ml-1">Masukkan Kode</span></button>';
                 })
                 ->addColumn('action', function ($row) {
-
-                    // $copyBtn = '<button class=" btn btn-primary" onclick="salinKode(`' . $row->kode_akses . '`)"><i class="fa-solid fa-clone"></i><span class="ml-1">Salin Kode</span></button>';
                     $generateBtn = '<button class="ml-2 btn btn-danger text-white" onclick="generateKode(' . $row->id_gaji . ')"><i class="fa-solid fa-rotate"></i><span class="ml-1">Generate Ulang Kode</span></span></button>';
-
                     return '<div class="text-center">'  . $generateBtn . '</div>';
                 })
                 ->rawColumns(['kode_akses', 'action'])

@@ -33,18 +33,6 @@ class ProfileController extends Controller
     /**
      * Update the user's profile information.
      */
-    // public function update(ProfileUpdateRequest $request): RedirectResponse
-    // {
-    //     $request->user()->fill($request->validated());
-
-    //     if ($request->user()->isDirty('email')) {
-    //         $request->user()->email_verified_at = null;
-    //     }
-
-    //     $request->user()->save();
-
-    //     return Redirect::route('profile.edit')->with('status', 'profile-updated');
-    // }
     public function update(Request $request)
     {
         $idUser = Auth::user()->id;
@@ -73,8 +61,6 @@ class ProfileController extends Controller
         }
     }
 
-
-
     public function updatePassword(Request $request)
     {
         $request->validate([
@@ -82,7 +68,8 @@ class ProfileController extends Controller
             'new_password' => ['required', 'min:8', 'confirmed'],
         ]);
 
-        $user = Auth::user();
+        $user = Auth::user()->id;
+        $user = User::find($user);
 
         // pastikan current password cocok
         if (!Hash::check($request->current_password, $user->password)) {

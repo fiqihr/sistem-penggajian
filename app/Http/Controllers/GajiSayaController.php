@@ -31,48 +31,18 @@ class GajiSayaController extends Controller
                 ->editColumn('bulan', function ($row) {
                     return formatBulan($row->bulan);
                 })
-                // ->editColumn('id_guru', function ($row) {
-                //     return $row->guru->user->name;
-                // })
-                // ->editColumn('jabatan', function ($row) {
-                //     return $row->guru->jabatan->nama_jabatan;
-                // })
-                // ->editColumn('gaji_pokok', function ($row) {
-                //     return formatRupiah($row->guru->jabatan->gaji_pokok);
-                // })
-                // ->editColumn('tj_transport', function ($row) {
-                //     return formatRupiah($row->guru->jabatan->tj_transport);
-                // })
-                // ->editColumn('uang_makan', function ($row) {
-                //     return formatRupiah($row->guru->jabatan->uang_makan);
-                // })
-                // ->editColumn('potongan', function ($row) {
-                //     return formatRupiah($row->potongan);
-                // })
                 ->editColumn('total_gaji', function ($row) {
                     return formatRupiah($row->total_gaji);
                 })
                 ->addColumn('action', function ($row) {
-                    // $showBtn = '<a href="' . route('potongan-gaji.show', $row->id_potongan_gaji) . '" class="btn btn-primary btn-user text-white"><i class="fa-solid fa-eye"></i><span class="ml-2">Detail</span></a>';
                     $editBtn = '<a href="#" class="ml-2 btn btn-warning text-white"><i class="fa-solid fa-pen-nib"></i><span class="ml-2">Edit</span></a>';
-                    // $editBtn = '<a href="' . route('potongan-gaji.edit', $row->id_potongan_gaji) . '" class="ml-2 btn btn-warning text-white"><i class="fa-solid fa-pen-nib"></i><span class="ml-2">Edit</span></a>';
-                    // $deleteBtn = '<form id="delete-form-' . $row->id_potongan_gaji . '" action="' . route('potongan-gaji.destroy', $row->id_potongan_gaji) . '" method="POST" style="display:inline;">
-                    //     ' . csrf_field() . '
-                    //     ' . method_field('DELETE') . '
-                    //     <button type="button" onclick="deleteClient(' . $row->id_potongan_gaji . ')" class="btn btn-danger">
-                    //         <i class="fa-solid fa-trash"></i><span class="ml-2 ">Hapus</span>
-                    //     </button>
-                    // </form>';
                     if ($row->status == 'belum') {
                         $cetakBtn = '<a disabled class="ml-2 btn btn-secondary text-white"><i class="fa-solid fa-print"></i><span class="ml-2">Cetak</span></a>';
                     } else if ($row->status == 'dikirim') {
-                        // $cetakBtn = '<a href="' . route('gaji.show', $row->id_gaji) . '" onclick="window.open(this.href, \'_blank\'); location.reload(); return false;"  class="ml-2 btn btn-warning text-white"><i class="fa-solid fa-print"></i><span class="ml-2">Cetak</span></a>';
                         $cetakBtn = '<btn onclick="cekKode(' . $row->id_gaji . ',\'' . $row->guru->user->email . '\')"  class="ml-2 btn btn-warning text-white"><i class="fa-solid fa-print"></i><span class="ml-2">Cetak</span></btn>';
                     } else {
                         $cetakBtn = '<btn onclick="cekKode(' . $row->id_gaji . ',\'' . $row->guru->user->email . '\')" class="ml-2 btn btn-success text-white"><i class="fa-solid fa-file-circle-check"></i><span class="ml-2">Dilihat</span></btn>';
                     }
-
-
                     return '<div class="text-center">' . $cetakBtn . '</div>';
                 })
                 ->rawColumns(['action'])
@@ -133,8 +103,6 @@ class GajiSayaController extends Controller
 
         $potongan_sakit = PotonganGaji::where('nama_potongan', 'Sakit')->first()->jml_potongan;
         $potongan_tidak_hadir = PotonganGaji::where('nama_potongan', 'Tidak Hadir')->first()->jml_potongan;
-        // $potongan_bpr = PotonganGaji::where('nama_potongan', 'BPR')->first()->jml_potongan;
-        // $potongan_lazisnu = PotonganGaji::where('nama_potongan', 'Lazisnu')->first()->jml_potongan;
 
         $semua_jenis_potongan = PotonganGaji::where('nama_potongan', 'not like', '%sakit%')->where('nama_potongan', 'not like', '%tidak hadir%')->get();
         $cek_jml_potongan = [];
@@ -154,7 +122,6 @@ class GajiSayaController extends Controller
             Gaji::where('id_gaji', $id)->update(['status' => 'diterima']);
         }
 
-        // dd($alpha, $sakit, $jmlPotonganAlpha, $jmlPotonganSakit);
         $bulan_gaji = $gaji->bulan;
         $nama_guru = $gaji->guru->user->name;
 
@@ -164,8 +131,6 @@ class GajiSayaController extends Controller
             'sakit' => $sakit,
             'potongan_tidak_hadir' => $potongan_tidak_hadir,
             'potongan_sakit' => $potongan_sakit,
-            // 'potongan_bpr' => $potongan_bpr,
-            // 'potongan_lazisnu' => $potongan_lazisnu,
             'tidak_hadir' => $tidak_hadir,
             'sakit' => $sakit,
             'jml_tunjangan' => $jml_tunjangan,
@@ -175,10 +140,10 @@ class GajiSayaController extends Controller
             'total_potongan' => $total_potongan,
             'semua_jenis_potongan' => $semua_jenis_potongan,
         ])->setPaper('A4', 'portrait');
+        $timestamp = date('YmdHis', strtotime($gaji->created_at));
 
-        $file_name = 'Slip Gaji - ' . formatBulan($bulan_gaji) . ' - ' . $nama_guru . '.pdf';
+        $file_name = 'Slip Gaji - ' . formatBulan($bulan_gaji) . ' - ' . $nama_guru . ' - ' . $timestamp . '.pdf';
         return $pdf->stream($file_name);
-        // return view('gaji.slip', compact('gaji', 'alpha', 'sakit', 'jmlPotonganAlpha', 'jmlPotonganSakit'));
     }
 
     /**

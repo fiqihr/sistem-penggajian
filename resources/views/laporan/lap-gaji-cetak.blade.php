@@ -138,14 +138,11 @@
         .header-container {
             width: 100%;
             margin-bottom: 5px;
-            /* Jarak setelah kop surat */
             border-collapse: collapse;
-            /* Penting untuk tabel di DomPDF */
         }
 
         .logo-cell {
             width: 18%;
-            /* Perkiraan lebar kolom logo, sesuaikan jika perlu */
             vertical-align: top;
             text-align: center;
             padding-right: 10px;
@@ -153,7 +150,6 @@
 
         .logo-cell img {
             width: 120px;
-            /* Sesuaikan ukuran logo Anda */
             height: auto;
         }
 
@@ -162,7 +158,6 @@
             vertical-align: top;
             text-align: center;
             line-height: 1.2;
-            /* Kerapatan baris */
         }
 
         .info-cell p,
@@ -170,10 +165,8 @@
         .info-cell h2,
         .info-cell h3 {
             margin: 1px 0;
-            /* Margin vertikal minimal antar teks */
             padding: 0;
             text-transform: uppercase;
-            /* Semua teks kapital seperti di gambar */
         }
 
         .lp-maarif,
@@ -185,10 +178,8 @@
 
         .school-name {
             font-size: 22pt;
-            /* Ukuran nama sekolah paling besar */
             font-weight: bold;
             color: #006400;
-            /* Warna hijau tua, sesuaikan dengan warna di logo Anda */
             margin-top: 3px;
             margin-bottom: 10px;
         }
@@ -197,8 +188,6 @@
             font-size: 9.5pt;
             font-weight: bold;
             color: #B22222;
-            /* Warna merah (firebrick), sesuaikan */
-            /* margin-top: 0px; */
         }
 
         .program-list {
@@ -232,11 +221,6 @@
             margin: 4px 0;
         }
 
-        /* Hapus atau sesuaikan kelas .w-100 dan .w-50 jika tidak digunakan di bagian lain */
-        /* .w-100 { width: 100% !important; } */
-        /* .w-50 { width: 50% !important; } */
-
-        /* Jika Anda masih membutuhkan judul "SLIP GAJI" */
         .document-title {
             text-align: center;
             font-size: 16pt;
@@ -277,7 +261,6 @@
     </div>
     <hr class="header-line">
 
-    {{-- Jika ini adalah slip gaji, judulnya bisa diletakkan di sini --}}
     <h2 class="document-title">LAPORAN GAJI SMK YABUJAH</h2>
     <hr style="margin-bottom: 20px; margin-top:20px;">
     <table class="table w-50" style="margin-bottom:20px;">
@@ -328,7 +311,6 @@
             <td style="text-align: right;">Bendahara</td>
         </tr>
     </table>
-
 </body>
 
 </html>

@@ -19,70 +19,10 @@
 
     @push('scripts')
         <script>
+            // Variabel ini akan tetap di sini agar bisa diakses oleh gaji_saya.js
             const gajiSayaRoute = "{{ route('gaji-saya.index') }}";
             const gajiSayaMessage = {!! json_encode(session('berhasil')) !!};
         </script>
         <script src="{{ asset('libs/js/gaji_saya.js') }}"></script>
-        <script>
-            function cekKode(idGaji, emailGuru) {
-                Swal.fire({
-                    title: "Kode Akses",
-                    input: "text",
-                    text: `Masukkan kode akses slip gaji yang sudah dikirim ke email ${emailGuru}.`,
-                    inputAttributes: {
-                        autocapitalize: "off"
-                    },
-                    showCancelButton: true,
-                    confirmButtonText: "Lihat Slip",
-                    showLoaderOnConfirm: true,
-                    cancelButtonText: "Batal",
-                    confirmButtonColor: "#28a745",
-                    cancelButtonColor: "#d33",
-                    customClass: {
-                        confirmButton: 'custom-swal-button',
-                        cancelButton: 'custom-swal-button'
-                    },
-                    preConfirm: async (kode) => {
-                        try {
-                            const response = await fetch(`/gaji/cek-kode`, {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')
-                                        .getAttribute("content"),
-                                },
-                                body: JSON.stringify({
-                                    id: idGaji,
-                                    kode: kode
-                                }),
-                            });
-
-                            const data = await response.json();
-
-                            if (!response.ok) {
-                                throw new Error(data.message || "Kode salah");
-                            }
-
-                            if (!data.encrypted_id) {
-                                throw new Error("ID terenkripsi tidak diterima dari server.");
-                            }
-
-                            return data;
-                        } catch (error) {
-                            Swal.showValidationMessage(`Gagal: ${error.message}`);
-                        }
-                    },
-                    allowOutsideClick: () => !Swal.isLoading()
-                }).then((result) => {
-                    if (result.isConfirmed && result.value && result.value.success) {
-                        const encryptedIdToShow = result.value.encrypted_id;
-                        window.open(`/gaji-saya/${encryptedIdToShow}`, '_blank');
-                        setTimeout(() => {
-                            window.location.reload();
-                        }, 100);
-                    }
-                });
-            }
-        </script>
     @endpush
 </x-layout>
