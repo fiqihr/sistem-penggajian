@@ -14,7 +14,7 @@ class PotonganGajiController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            return DataTables::of(PotonganGaji::query()->orderBy('id_potongan_gaji', 'desc'))
+            return DataTables::of(PotonganGaji::query())
                 ->addIndexColumn()
                 ->editColumn('jml_potongan', function ($row) {
                     return formatRupiah($row->jml_potongan);

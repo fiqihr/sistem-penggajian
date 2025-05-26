@@ -8,7 +8,7 @@
             <div class="bg-white px-4 py-3 rounded-lg shadow-sm">
                 <p class="block font-weight-bold ">Filter</p>
                 <div class="row">
-                    <div class="col-6">
+                    <div class="col-4">
                         <select id="filter-bulan" class="form-control">
                             <option value="">-- Semua Bulan --</option>
                             @foreach ($list_bulan as $bulan)
@@ -18,11 +18,19 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-6">
+                    <div class="col-4">
                         <select id="filter-tahun" class="form-control">
                             <option value="">-- Semua Tahun --</option>
                             @foreach ($list_tahun as $tahun)
                                 <option value="{{ $tahun }}">{{ $tahun }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-4">
+                        <select name="nama" id="filter-nama" class="form-control">
+                            <option value="">-- Semua Guru --</option>
+                            @foreach ($list_nama as $nama)
+                                <option value="{{ $nama }}">{{ $nama }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -42,11 +50,12 @@
             <thead id="mytable-thead">
                 <tr>
                     <th class="text-center">No</th>
+                    <th>Id Presensi</th>
                     <th>Bulan</th>
                     <th>Nama Guru</th>
-                    <th>Hadir</th>
-                    <th>Sakit</th>
-                    <th>Tidak Hadir</th>
+                    <th class="text-center">Hadir</th>
+                    <th class="text-center">Sakit</th>
+                    <th class="text-center">Tidak Hadir</th>
                     <th class="text-center">Aksi</th>
                 </tr>
             </thead>

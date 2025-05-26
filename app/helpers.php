@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
 
@@ -105,5 +106,37 @@ if (!function_exists('terbilang')) {
     } else {
       return "Angka terlalu besar";
     }
+  }
+}
+
+
+if (!function_exists('indoToEnglishMonth')) {
+  function indoToEnglishMonth($keyword)
+  {
+    $map = [
+      'januari' => 'january',
+      'februari' => 'february',
+      'maret' => 'march',
+      'april' => 'april',
+      'mei' => 'may',
+      'juni' => 'june',
+      'juli' => 'july',
+      'agustus' => 'august',
+      'september' => 'september',
+      'oktober' => 'october',
+      'november' => 'november',
+      'desember' => 'december',
+    ];
+
+    $keyword = strtolower($keyword);
+    $results = [];
+
+    foreach ($map as $indo => $english) {
+      if (Str::contains($indo, $keyword)) {
+        $results[] = $english;
+      }
+    }
+
+    return $results;
   }
 }

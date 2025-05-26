@@ -14,8 +14,9 @@
             <thead id="mytable-thead">
                 <tr>
                     <th class="text-center">No</th>
+                    <th>Id Guru</th>
                     <th>Nama</th>
-                    <th>NIG</th>
+                    <th class="">NIG</th>
                     <th>Jenis Kelamin</th>
                     <th>Nama Jabatan</th>
                     <th>Tanggal Masuk</th>

@@ -17,21 +17,54 @@ class PresensiController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $query = Presensi::with('guru')->orderBy('id_presensi', 'desc');
+            $query = Presensi::with('guru.user');
+
+            // Filter berdasarkan bulan
             if ($request->filled('bulan')) {
                 $query->whereRaw('SUBSTRING(TRIM(bulan), 6, 2) = ?', [$request->bulan]);
             }
+
+            // Filter berdasarkan tahun
             if ($request->filled('tahun')) {
                 $query->whereRaw('SUBSTRING(TRIM(bulan), 1, 4) = ?', [$request->tahun]);
             }
+
+            // Filter berdasarkan nama guru
+            if ($request->filled('nama')) {
+                $query->whereHas('guru.user', function ($q) use ($request) {
+                    $q->where('name', 'like', '%' . $request->nama . '%');
+                });
+            }
+
             return DataTables::of($query)
                 ->addIndexColumn()
+
+                // Format bulan
                 ->editColumn('bulan', function ($row) {
                     return formatBulan($row->bulan);
                 })
-                ->editColumn('nama_guru', function ($row) {
-                    return $row->guru ? $row->guru->user->name : '-';
+
+                // Filter bulan custom
+                ->filterColumn('bulan', function ($query, $keyword) {
+                    $englishMonths = indoToEnglishMonth($keyword);
+                    $numeric = trim($keyword);
+
+                    $query->where(function ($q) use ($englishMonths, $numeric) {
+                        foreach ($englishMonths as $month) {
+                            $q->orWhereRaw("LOWER(MONTHNAME(bulan)) LIKE ?", ["%" . strtolower($month) . "%"]);
+                        }
+                        if (preg_match('/^\d{4}$/', $numeric)) {
+                            $q->orWhereYear('bulan', $numeric);
+                        }
+                    });
                 })
+
+                // Tampilkan nama guru
+                ->editColumn('id_guru', function ($row) {
+                    return $row->guru && $row->guru->user ? $row->guru->user->name : '-';
+                })
+
+                // Kolom action
                 ->addColumn('action', function ($row) {
                     $editBtn = '<a href="' . route('presensi.edit', $row->id_presensi) . '" class="btn btn-warning text-white ml-2"><i class="fa-solid fa-pen-nib"></i><span class="ml-2">Edit</span></a>';
                     $deleteBtn = '<form id="delete-form-' . $row->id_presensi . '" action="' . route('presensi.destroy', $row->id_presensi) . '" method="POST" style="display:inline;">
@@ -46,15 +79,28 @@ class PresensiController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         }
+
         // Ambil daftar bulan dan tahun unik dari tabel presensi
         $list_bulan = Presensi::selectRaw('DISTINCT(SUBSTRING(bulan, 6, 2)) as bulan')
             ->orderBy('bulan')
             ->pluck('bulan');
+
         $list_tahun = Presensi::selectRaw('DISTINCT(SUBSTRING(bulan, 1, 4)) as tahun')
             ->orderBy('tahun')
             ->pluck('tahun');
-        return view('presensi.index', compact('list_bulan', 'list_tahun'));
+
+        // Ambil daftar nama guru
+        $list_nama = Guru::with('user')->get()->map(function ($guru) {
+            return $guru->user ? $guru->user->name : null;
+        })
+            ->filter()
+            ->unique()
+            ->sort() // urutkan berdasarkan abjad
+            ->values(); // reset index
+
+        return view('presensi.index', compact('list_bulan', 'list_tahun', 'list_nama'));
     }
+
 
     /**
      * Show the form for creating a new resource.

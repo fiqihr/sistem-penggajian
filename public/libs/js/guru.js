@@ -3,6 +3,7 @@ $(document).ready(function () {
         processing: true,
         serverSide: true,
         ajax: guruRoute,
+        order: [[1, "desc"]],
         columns: [
             {
                 data: "DT_RowIndex",
@@ -12,6 +13,11 @@ $(document).ready(function () {
                 className: "align-middle text-center",
             },
             {
+                data: "id_guru",
+                name: "id_guru",
+                visible: false,
+            },
+            {
                 data: "name",
                 name: "name",
                 className: "align-middle",
@@ -19,7 +25,7 @@ $(document).ready(function () {
             {
                 data: "nig",
                 name: "nig",
-                className: "align-middle",
+                className: "align-middle text-left",
             },
             {
                 data: "jenis_kelamin",

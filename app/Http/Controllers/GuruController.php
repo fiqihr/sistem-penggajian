@@ -19,7 +19,9 @@ class GuruController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            return DataTables::of(Guru::with('user', 'jabatan')->orderBy('id_guru', 'desc'))
+            $data = Guru::with('user', 'jabatan')->select('guru.*');
+
+            return DataTables::eloquent($data)
                 ->addIndexColumn()
                 ->editColumn('name', function ($row) {
                     return $row->user ? $row->user->name : '-';
@@ -27,26 +29,67 @@ class GuruController extends Controller
                 ->editColumn('nama_jabatan', function ($row) {
                     return $row->jabatan ? $row->jabatan->nama_jabatan : '-';
                 })
-                ->editColumn('tanggal_masuk', function ($row) {
+                ->addColumn('tanggal_masuk', function ($row) {
                     return formatTanggal($row->tanggal_masuk);
+                })
+                ->filterColumn('tanggal_masuk', function ($query, $keyword) {
+                    $englishMonths = indoToEnglishMonth($keyword);
+                    $numeric = trim($keyword);
+
+                    $query->where(function ($q) use ($englishMonths, $numeric) {
+
+                        foreach ($englishMonths as $month) {
+                            $q->orWhereRaw("LOWER(MONTHNAME(tanggal_masuk)) LIKE ?", ["%" . strtolower($month) . "%"]);
+                        }
+
+                        // Tahun (4 digit)
+                        if (preg_match('/^\d{4}$/', $numeric)) {
+                            $q->orWhereYear('tanggal_masuk', $numeric);
+                        }
+
+                        // Tanggal (1–31)
+                        if (is_numeric($numeric) && (int)$numeric >= 1 && (int)$numeric <= 31) {
+                            $q->orWhereDay('tanggal_masuk', $numeric);
+                        }
+                    });
                 })
                 ->addColumn('action', function ($row) {
                     $showBtn = '<a href="' . route('guru.show', $row->id_guru) . '" class="btn btn-primary text-white"><i class="fa-solid fa-eye"></i><span class="ml-2">Detail</span></a>';
-                    $editBtn = '<a href="' . route('guru.edit', $row->id_guru) . '" class=" ml-1 btn btn-warning text-white"><i class="fa-solid fa-pen-nib"></i><span class="ml-2 ">Edit</span></a>';
+                    $editBtn = '<a href="' . route('guru.edit', $row->id_guru) . '" class="ml-1 btn btn-warning text-white"><i class="fa-solid fa-pen-nib"></i><span class="ml-2">Edit</span></a>';
                     $deleteBtn = '<form id="delete-form-' . $row->id_guru . '" action="' . route('guru.destroy', $row->id_guru) . '" method="POST" style="display:inline;">
-                            ' . csrf_field() . '
-                            ' . method_field('DELETE') . '
-                            <button type="button" onclick="deleteGuru(' . $row->id_guru . ')" class="btn btn-danger">
-                                <i class="fa-solid fa-trash"></i><span class="ml-2 ">Hapus</span>
-                            </button>
-                        </form>';
+                    ' . csrf_field() . '
+                    ' . method_field('DELETE') . '
+                    <button type="button" onclick="deleteGuru(' . $row->id_guru . ')" class="btn btn-danger">
+                        <i class="fa-solid fa-trash"></i><span class="ml-2">Hapus</span>
+                    </button>
+                </form>';
                     return '<div class="text-center">' . $showBtn . $editBtn . $deleteBtn . '</div>';
+                })
+                ->filterColumn('name', function ($query, $keyword) {
+                    $query->whereHas('user', function ($q) use ($keyword) {
+                        $q->where('name', 'like', "%{$keyword}%");
+                    });
+                })
+                ->orderColumn('name', function ($query, $order) {
+                    $query->join('users', 'users.id', '=', 'guru.id_user')
+                        ->orderBy('users.name', $order);
+                })
+                ->filterColumn('nama_jabatan', function ($query, $keyword) {
+                    $query->whereHas('jabatan', function ($q) use ($keyword) {
+                        $q->where('nama_jabatan', 'like', "%{$keyword}%");
+                    });
+                })
+                ->orderColumn('nama_jabatan', function ($query, $order) {
+                    $query->join('jabatan', 'jabatan.id_jabatan', '=', 'guru.id_jabatan')
+                        ->orderBy('jabatan.nama_jabatan', $order);
                 })
                 ->rawColumns(['action'])
                 ->make(true);
         }
+
         return view('guru.index');
     }
+
 
     /**
      * Show the form for creating a new resource.

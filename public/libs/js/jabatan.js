@@ -3,6 +3,7 @@ $(document).ready(function () {
         processing: true,
         serverSide: true,
         ajax: jabatanRoute,
+        order: [[1, "desc"]],
         columns: [
             {
                 data: "DT_RowIndex",
@@ -12,14 +13,23 @@ $(document).ready(function () {
                 className: "align-middle text-center",
             },
             {
+                data: "id_jabatan",
+                name: "id_jabatan",
+                visible: false,
+            },
+            {
                 data: "nama_jabatan",
                 name: "nama_jabatan",
                 className: "align-middle",
+                orderable: true,
+                searchable: true,
             },
             {
                 data: "gaji_pokok",
                 name: "gaji_pokok",
                 className: "align-middle",
+                orderable: true,
+                searchable: true,
             },
             {
                 data: "action",

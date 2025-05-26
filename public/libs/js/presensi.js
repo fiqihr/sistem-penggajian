@@ -2,11 +2,14 @@ $(document).ready(function () {
     const table = $("#my-table").DataTable({
         processing: true,
         serverSide: true,
+        order: [[1, "desc"]],
         ajax: {
             url: presensiRoute,
             data: function (d) {
                 d.bulan = $("#filter-bulan").val();
                 d.tahun = $("#filter-tahun").val();
+                d.nama = $("#filter-nama").val();
+                console.log(d);
             },
         },
         columns: [
@@ -18,29 +21,34 @@ $(document).ready(function () {
                 className: "align-middle text-center",
             },
             {
+                data: "id_presensi",
+                name: "id_presensi",
+                visible: false,
+            },
+            {
                 data: "bulan",
                 name: "bulan",
                 className: "align-middle",
             },
             {
-                data: "nama_guru",
-                name: "nama_guru",
+                data: "id_guru",
+                name: "id_guru",
                 className: "align-middle",
             },
             {
                 data: "hadir",
                 name: "hadir",
-                className: "align-middle",
+                className: "align-middle text-center",
             },
             {
                 data: "sakit",
                 name: "sakit",
-                className: "align-middle",
+                className: "align-middle text-center",
             },
             {
                 data: "tidak_hadir",
                 name: "tidak_hadir",
-                className: "align-middle",
+                className: "align-middle text-center",
             },
             {
                 data: "action",
@@ -56,13 +64,11 @@ $(document).ready(function () {
             [10, 25, 50, "All"],
         ],
         layout: {
-            topEnd: "search",
+            topEnd: "",
             bottomEnd: "paging",
             bottomStart: "info",
         },
         language: {
-            search: "_INPUT_",
-            searchPlaceholder: "Cari data...",
             lengthMenu: "Menampilkan _MENU_ data",
             info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
             emptyTable: "Tidak ada data",
@@ -70,7 +76,7 @@ $(document).ready(function () {
     });
 
     // Filter saat select berubah
-    $("#filter-bulan, #filter-tahun").on("change", function () {
+    $("#filter-bulan, #filter-tahun, #filter-nama").on("change", function () {
         table.ajax.reload();
     });
 

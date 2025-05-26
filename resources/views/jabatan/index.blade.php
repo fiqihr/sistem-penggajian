@@ -14,6 +14,7 @@
             <thead id="mytable-thead">
                 <tr>
                     <th class="text-center">No</th>
+                    <th>Id Jabatan</th>
                     <th>Nama Jabatan</th>
                     <th>Gaji Pokok</th>
                     <th class="text-center">Aksi</th>

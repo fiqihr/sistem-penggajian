@@ -15,8 +15,11 @@ class JabatanController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            return DataTables::of(Jabatan::query()->orderBy('id_jabatan', 'desc'))
+            return DataTables::of(Jabatan::query())
                 ->addIndexColumn()
+                ->editColumn('nama_jabatan', function ($row) {
+                    return $row->nama_jabatan;
+                })
                 ->editColumn('gaji_pokok', function ($row) {
                     return formatRupiah($row->gaji_pokok);
                 })
