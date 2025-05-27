@@ -17,6 +17,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use App\Mail\KirimKodeSlipGaji;
+use Illuminate\Support\Facades\DB;
 
 class GajiController extends Controller
 {
@@ -27,19 +28,75 @@ class GajiController extends Controller
     {
         App::setLocale('id');
         if ($request->ajax()) {
-            return DataTables::of(Gaji::query()->orderBy('id_gaji', 'desc'))
+            $query = Gaji::with(['guru.jabatan', 'guru.user', 'tunjangan'])
+                ->leftJoin('guru', 'gaji.id_guru', '=', 'guru.id_guru')
+                ->leftJoin('users', 'guru.id_user', '=', 'users.id')
+                ->leftJoin('jabatan', 'guru.id_jabatan', '=', 'jabatan.id_jabatan')
+                ->select('gaji.*', DB::raw('users.name as nama_guru'), DB::raw('jabatan.gaji_pokok as gaji_pokok'));
+            if ($request->filled('bulan')) {
+                $query->whereRaw('SUBSTRING(TRIM(bulan), 6, 2) = ?', [$request->bulan]);
+            }
+            if ($request->filled('tahun')) {
+                $query->whereRaw('SUBSTRING(TRIM(bulan), 1, 4) = ?', [$request->tahun]);
+            }
+            return DataTables::of($query)
+                ->filterColumn('id_jabatan', function ($query, $keyword) {
+                    $query->whereHas('guru.jabatan', function ($q) use ($keyword) {
+                        $q->where('nama_jabatan', 'like', "%$keyword%");
+                    });
+                })
+                ->filterColumn('id_guru', function ($query, $keyword) {
+                    $query->whereHas('guru.user', function ($q) use ($keyword) {
+                        $q->where('name', 'like', "%$keyword%");
+                    });
+                })
+                ->filterColumn('id_tunjangan', function ($query, $keyword) {
+                    $query->whereHas('tunjangan', function ($q) use ($keyword) {
+                        $q->where('nama_tunjangan', 'like', "%$keyword%");
+                    });
+                })
+                ->filterColumn('gaji_pokok', function ($query, $keyword) {
+                    $query->whereHas('guru.jabatan', function ($q) use ($keyword) {
+                        $q->where('gaji_pokok', 'like', "%{$keyword}%");
+                    });
+                })
+                ->filterColumn('nama_guru', function ($query, $keyword) {
+                    $query->whereHas('guru.user', function ($q) use ($keyword) {
+                        $q->where('name', 'like', "%{$keyword}%");
+                    });
+                })
+                ->filterColumn('bulan', function ($query, $keyword) {
+                    $englishMonths = indoToEnglishMonth($keyword);
+                    $numeric = trim($keyword);
+
+                    $query->where(function ($q) use ($englishMonths, $numeric) {
+                        foreach ($englishMonths as $month) {
+                            $q->orWhereRaw("LOWER(MONTHNAME(bulan)) LIKE ?", ["%" . strtolower($month) . "%"]);
+                        }
+                        if (preg_match('/^\d{4}$/', $numeric)) {
+                            $q->orWhereYear('bulan', $numeric);
+                        }
+                    });
+                })
+                ->orderColumn('nama_guru', function ($query, $order) {
+                    $query->orderBy('users.name', $order);
+                })
+                ->orderColumn('gaji_pokok', function ($query, $order) {
+                    $query->orderBy('jabatan.gaji_pokok', $order);
+                })
                 ->addIndexColumn()
                 ->editColumn('bulan', function ($row) {
                     return formatBulan($row->bulan);
                 })
                 ->editColumn('id_guru', function ($row) {
-                    return $row->guru->user->name;
+                    return $row->nama_guru ?? $row->guru->user->name;
                 })
-                ->editColumn('jabatan', function ($row) {
+
+                ->editColumn('id_jabatan', function ($row) {
                     return $row->guru->jabatan->nama_jabatan;
                 })
                 ->editColumn('gaji_pokok', function ($row) {
-                    return formatRupiah($row->guru->jabatan->gaji_pokok);
+                    return formatRupiah($row->gaji_pokok);
                 })
                 ->editColumn('id_tunjangan', function ($row) {
                     $nama_tunjangan = $row->tunjangan->nama_tunjangan ?? 'Tidak ada tunjangan';
@@ -67,7 +124,14 @@ class GajiController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        return view('gaji.index');
+        $list_bulan = Presensi::selectRaw('DISTINCT(SUBSTRING(bulan, 6, 2)) as bulan')
+            ->orderBy('bulan')
+            ->pluck('bulan');
+
+        $list_tahun = Presensi::selectRaw('DISTINCT(SUBSTRING(bulan, 1, 4)) as tahun')
+            ->orderBy('tahun')
+            ->pluck('tahun');
+        return view('gaji.index', compact('list_bulan', 'list_tahun'));
     }
 
     /**

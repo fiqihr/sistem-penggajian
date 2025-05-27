@@ -40,7 +40,7 @@ $(document).ready(function () {
             [10, 25, 50, "All"],
         ],
         layout: {
-            topEnd: "search",
+            topEnd: "",
             bottomEnd: "paging",
             bottomStart: "info",
         },

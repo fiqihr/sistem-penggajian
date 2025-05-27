@@ -203,3 +203,52 @@ if (!function_exists('indoToEnglishMonthNumber')) {
     return $results;
   }
 }
+
+if (!function_exists('getBulanMap')) {
+  function getBulanMap()
+  {
+    return [
+      'januari' => '01',
+      'februari' => '02',
+      'maret' => '03',
+      'april' => '04',
+      'mei' => '05',
+      'juni' => '06',
+      'juli' => '07',
+      'agustus' => '08',
+      'september' => '09',
+      'oktober' => '10',
+      'november' => '11',
+      'desember' => '12',
+    ];
+  }
+}
+
+if (!function_exists('cariBulanDariInput')) {
+  function cariBulanDariInput($input)
+  {
+    $bulanMap = [
+      'januari' => '01',
+      'februari' => '02',
+      'maret' => '03',
+      'april' => '04',
+      'mei' => '05',
+      'juni' => '06',
+      'juli' => '07',
+      'agustus' => '08',
+      'september' => '09',
+      'oktober' => '10',
+      'november' => '11',
+      'desember' => '12',
+    ];
+
+    $input = strtolower($input);
+    foreach ($bulanMap as $nama => $angka) {
+      if (Str::startsWith($nama, $input)) {
+        return $angka;
+      }
+    }
+
+    return null;
+  }
+}

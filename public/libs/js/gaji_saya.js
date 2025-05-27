@@ -21,7 +21,7 @@ $(document).ready(function () {
                 data: "bulan_format",
                 name: "bulan",
                 className: "align-middle",
-                searchable: true, // <- tambahkan ini
+                searchable: true,
             },
 
             {
@@ -34,8 +34,6 @@ $(document).ready(function () {
                 name: "action",
                 orderable: false,
                 searchable: false,
-                // Pastikan tombol yang memanggil cekKode(idGaji, emailGuru)
-                // memiliki parameter yang benar dari data server-side
             },
         ],
         lengthChange: true,
@@ -58,8 +56,6 @@ $(document).ready(function () {
         },
     });
 
-    // Panggil alert jika ada message dari Laravel
-    // gajiSayaMessage sudah didefinisikan di Blade
     if (gajiSayaMessage) {
         gajiSayaBerhasil(gajiSayaMessage);
     }

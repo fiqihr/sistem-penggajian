@@ -9,7 +9,6 @@ $(document).ready(function () {
                 d.bulan = $("#filter-bulan").val();
                 d.tahun = $("#filter-tahun").val();
                 d.nama = $("#filter-nama").val();
-                console.log(d);
             },
         },
         columns: [
@@ -32,7 +31,7 @@ $(document).ready(function () {
             },
             {
                 data: "id_guru",
-                name: "id_guru",
+                name: "nama_guru",
                 className: "align-middle",
             },
             {

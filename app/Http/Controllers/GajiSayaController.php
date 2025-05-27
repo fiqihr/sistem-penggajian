@@ -29,48 +29,17 @@ class GajiSayaController extends Controller
         $id_guru = Guru::where('id_user', $id_user)->value('id_guru');
 
         if ($request->ajax()) {
-            $query = Gaji::query()->where('id_guru', $id_guru)->whereNot('status', 'belum');
-
-            // 🔍 Pencarian global termasuk nama bulan
+            $query = Gaji::query()
+                ->where('id_guru', $id_guru)
+                ->whereNot('status', 'belum');
             if ($request->has('search') && !empty($request->search['value'])) {
                 $searchValue = strtolower($request->search['value']);
-
-                $bulanMap = [
-                    'januari' => '01',
-                    'februari' => '02',
-                    'maret' => '03',
-                    'april' => '04',
-                    'mei' => '05',
-                    'juni' => '06',
-                    'juli' => '07',
-                    'agustus' => '08',
-                    'september' => '09',
-                    'oktober' => '10',
-                    'november' => '11',
-                    'desember' => '12',
-                ];
-
-                $bulanDitemukan = false;
-
-                foreach ($bulanMap as $nama => $angka) {
-                    if (Str::contains($searchValue, $nama)) {
-                        // Ambil tahun jika ada angka (misal: "juni 2025")
-                        $tahun = preg_replace('/[^0-9]/', '', $searchValue);
-
-                        if (!empty($tahun)) {
-                            $pattern = "$tahun-$angka";
-                        } else {
-                            $pattern = "-$angka";
-                        }
-
-                        $query->where('bulan', 'like', "%$pattern%");
-                        $bulanDitemukan = true;
-                        break;
-                    }
-                }
-
-                // Jika tidak ditemukan nama bulan, lanjut pencarian umum
-                if (!$bulanDitemukan) {
+                $angkaBulan = cariBulanDariInput($searchValue);
+                if ($angkaBulan) {
+                    $tahun = preg_replace('/[^0-9]/', '', $searchValue);
+                    $pattern = !empty($tahun) ? "$tahun-$angkaBulan" : "-$angkaBulan";
+                    $query->where('bulan', 'like', "%$pattern%");
+                } else {
                     $query->where(function ($q) use ($searchValue) {
                         $q->where('bulan', 'like', "%$searchValue%")
                             ->orWhere('total_gaji', 'like', "%$searchValue%")
@@ -78,54 +47,37 @@ class GajiSayaController extends Controller
                     });
                 }
             }
-
             return DataTables::of($query)
                 ->addIndexColumn()
-                ->addColumn('bulan_format', function ($row) {
-                    return formatBulan($row->bulan);
-                })
-                ->editColumn('bulan', function ($row) {
-                    return formatBulan($row->bulan);
-                })
-                ->editColumn('total_gaji', function ($row) {
-                    return formatRupiah($row->total_gaji);
-                })
+                ->addColumn('bulan_format', fn($row) => formatBulan($row->bulan))
+                ->editColumn('bulan', fn($row) => formatBulan($row->bulan))
+                ->editColumn('total_gaji', fn($row) => formatRupiah($row->total_gaji))
                 ->addColumn('action', function ($row) {
-                    // tombol aksi
+                    $editBtn = '<a href="#" class="ml-2 btn btn-warning text-white"><i class="fa-solid fa-pen-nib"></i><span class="ml-2">Edit</span></a>';
+                    if ($row->status == 'belum') {
+                        $cetakBtn = '<a disabled class="ml-2 btn btn-secondary text-white"><i class="fa-solid fa-print"></i><span class="ml-2">Cetak</span></a>';
+                    } else if ($row->status == 'dikirim') {
+                        $cetakBtn = '<btn onclick="cekKode(' . $row->id_gaji . ',\'' . $row->guru->user->email . '\')"  class="ml-2 btn btn-warning text-white"><i class="fa-solid fa-print"></i><span class="ml-2">Cetak</span></btn>';
+                    } else {
+                        $cetakBtn = '<btn onclick="cekKode(' . $row->id_gaji . ',\'' . $row->guru->user->email . '\')" class="ml-2 btn btn-success text-white"><i class="fa-solid fa-file-circle-check"></i><span class="ml-2">Dilihat</span></btn>';
+                    }
+                    return '<div class="text-center">' . $cetakBtn . '</div>';
                 })
                 ->filter(function ($query) use ($request) {
                     if ($request->has('search') && !empty($request->search['value'])) {
                         $searchValue = strtolower($request->search['value']);
+                        $angkaBulan = cariBulanDariInput($searchValue);
 
-                        $bulanMap = [
-                            'januari' => '01',
-                            'februari' => '02',
-                            'maret' => '03',
-                            'april' => '04',
-                            'mei' => '05',
-                            'juni' => '06',
-                            'juli' => '07',
-                            'agustus' => '08',
-                            'september' => '09',
-                            'oktober' => '10',
-                            'november' => '11',
-                            'desember' => '12',
-                        ];
-
-                        foreach ($bulanMap as $nama => $angka) {
-                            if (Str::contains($searchValue, $nama)) {
-                                $tahun = preg_replace('/[^0-9]/', '', $searchValue);
-                                $pattern = !empty($tahun) ? "$tahun-$angka" : "-$angka";
-                                $query->where('bulan', 'like', "%$pattern%");
-                                return;
-                            }
+                        if ($angkaBulan) {
+                            $tahun = preg_replace('/[^0-9]/', '', $searchValue);
+                            $pattern = !empty($tahun) ? "$tahun-$angkaBulan" : "-$angkaBulan";
+                            $query->where('bulan', 'like', "%$pattern%");
+                        } else {
+                            $query->where(function ($q) use ($searchValue) {
+                                $q->where('bulan', 'like', "%$searchValue%")
+                                    ->orWhere('total_gaji', 'like', "%$searchValue%");
+                            });
                         }
-
-                        $query->where(function ($q) use ($searchValue) {
-                            $q->where('bulan', 'like', "%$searchValue%")
-                                ->orWhere('total_gaji', 'like', "%$searchValue%")
-                                ->orWhere('status', 'like', "%$searchValue%");
-                        });
                     }
                 })
                 ->rawColumns(['action'])
@@ -134,6 +86,7 @@ class GajiSayaController extends Controller
 
         return view('gaji_saya.index');
     }
+
 
 
 

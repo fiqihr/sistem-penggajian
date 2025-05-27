@@ -1,8 +1,15 @@
 $(document).ready(function () {
-    $("#my-table").DataTable({
+    const table = $("#my-table").DataTable({
         processing: true,
         serverSide: true,
-        ajax: gajiRoute,
+        order: [[1, "desc"]],
+        ajax: {
+            url: gajiRoute,
+            data: function (d) {
+                d.bulan = $("#filter-bulan").val();
+                d.tahun = $("#filter-tahun").val();
+            },
+        },
         columns: [
             {
                 data: "DT_RowIndex",
@@ -12,18 +19,23 @@ $(document).ready(function () {
                 className: "align-middle text-center",
             },
             {
+                data: "id_gaji",
+                name: "id_gaji",
+                visible: false,
+            },
+            {
                 data: "bulan",
                 name: "bulan",
                 className: "align-middle",
             },
             {
                 data: "id_guru",
-                name: "id_guru",
+                name: "nama_guru",
                 className: "align-middle",
             },
             {
-                data: "jabatan",
-                name: "jabatan",
+                data: "id_jabatan",
+                name: "id_jabatan",
                 className: "align-middle",
             },
             {
@@ -73,7 +85,10 @@ $(document).ready(function () {
         },
     });
 
-    // Panggil alert jika ada message dari Laravel
+    $("#filter-bulan, #filter-tahun").on("change", function () {
+        table.ajax.reload();
+    });
+
     if (gajiMessage) {
         gajiBerhasil(gajiMessage);
     }
